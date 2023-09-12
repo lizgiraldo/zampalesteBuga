@@ -2,7 +2,7 @@
     <div class="body">
         <img class="logo" src="../../../assets/img/llave.png" alt="Login">   
     <h1>Registro Usuario</h1>
-    <form [formGroup]="registrarUsuario">
+    <form (ngSubmit)="registrar()" [formGroup]="registrarUsuario">
         <div class="form-floating mb-3">
             <input type="email" class="form-control" formControlName="email" placeholder="name@example.com">
             <label>Email</label>
@@ -16,7 +16,7 @@
             <label>Repetir Password</label>
           </div>
           <div class="d-grid gap-2">
-            <button class="btn btn-info btn-lg mb-3" type="button">Aceptar</button>
+            <button class="btn btn-info btn-lg mb-3" type="submit">Aceptar</button>
           </div>
           <a  routerLink="/login">Volver</a>
     </form>
