@@ -12,8 +12,8 @@ export class RegistrarUsuarioComponent implements OnInit {
 registrarUsuario:FormGroup;
 
   constructor(private fb: FormBuilder, 
-    private afAuth: AngularFireAuth,
-    private toastr: ToastrService) {
+    private afAuth: AngularFireAuth
+    ) {
     
     this.registrarUsuario = this.fb.group({
       email: ['' , Validators.required],
