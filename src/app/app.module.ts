@@ -21,6 +21,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 import { ProductoComponent } from './components/producto/producto.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { FacturarComponent } from './components/facturar/facturar.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     VerificarCorreoComponent,
     RecuperarPasswordComponent,
     SpinnerComponent,
-    ProductoComponent
+    ProductoComponent,
+    FacturarComponent
   ],
   imports: [
     BrowserModule,

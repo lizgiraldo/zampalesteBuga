@@ -5,7 +5,7 @@ export interface Producto {
   nombre: string;
   descripcion: string;
   precio: number;
-  stock: number;
+  cantidad_stock: number;
   categoria: string; // Puedes cambiar este tipo según cómo hayas modelado las categorías
   fecha_creacion: any; // Puedes usar `firebase.firestore.Timestamp` o `Date` según tus preferencias
 }

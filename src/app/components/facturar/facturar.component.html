@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <h2>Facturación</h2>
+
+  <div class="row">
+    <div class="card col-12 py-5"> modulo cliente</div>
+  </div>
+  <div class="row">
+    <div class="col-7">
+      <h5>Productos</h5>
+  <form class="row">
+    <div class="form-group form-inline col-12 mb-3">
+      Buscar: <input class="form-control" type="text" [formControl]="filter" />
+    </div>
+  </form>
+  <div style="height: 70%; overflow: scroll">
+    <table class="table table-striped osdo" aria-label="">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Codigo Corto</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos$ | async; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.codigo_corto }}</td>
+          <td>{{ producto.descripcion }}</td>
+          <td>{{ producto.precio }}</td>
+          <td>{{ producto.cantidad_stock }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+    </div>
+    <div class="col-5">
+      <h5>Productos agregados</h5>
+    </div>
+  </div>
+
+</div>
+
+
