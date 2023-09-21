@@ -26,6 +26,7 @@ export class ProductoComponent implements OnInit {
   editingProducto: Producto | null = null;
   editState: boolean = false;
 
+
   constructor(
     private formBuilder: FormBuilder,
     private productoService: ProductoService,
