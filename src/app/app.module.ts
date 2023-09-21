@@ -22,7 +22,10 @@ import { environment } from 'src/environments/environment';
 import { ProductoComponent } from './components/producto/producto.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FacturarComponent } from './components/facturar/facturar.component';
+
+//modulos de ngx
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 
 @NgModule({
@@ -44,7 +47,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
