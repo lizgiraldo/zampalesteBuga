@@ -1,6 +1,7 @@
 // Producto.ts
 export interface Producto {
   id?: string; // ID del producto (generado automáticamente por Firestore)
+  codigo_corto:string
   nombre: string;
   descripcion: string;
   precio: number;

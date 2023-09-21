@@ -1,56 +1,147 @@
 <div class="container mt-5">
   <h2>Lista de Productos</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Descripción</th>
-        <th scope="col">Precio</th>
-        <th scope="col">Cantidad en Stock</th>
-        <th scope="col">Categoría</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let producto of productos; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ producto.nombre }}</td>
-        <td>{{ producto.descripcion }}</td>
-        <td>{{ producto.precio }}</td>
-        <td>{{ producto.stock }}</td>
-        <td>{{ producto.categoria }}</td>
-        <td>
-          <button class="btn btn-primary btn-sm" (click)="editarProducto(producto)">Editar</button>
-          <button class="btn btn-danger btn-sm" >Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
-  <h2>Agregar/Editar Producto</h2>
-  <form [formGroup]="productoForm" (submit)="guardarProducto()">
-    <div class="form-group">
-      <label for="nombre">Nombre:</label>
-      <input type="text" class="form-control" id="nombre" formControlName="nombre" required>
+  <form class="row">
+    <div class="form-group form-inline col-12 col-md-8">
+      Buscar: <input class="form-control" type="text" [formControl]="filter" />
     </div>
-    <div class="form-group">
-      <label for="descripcion">Descripción:</label>
-      <textarea class="form-control" id="descripcion" formControlName="descripcion" required></textarea>
+    <div class="form-group form-inline col-6 col-md-2 pb-3">
+      <button
+        type="button"
+        ngbAutofocus
+        (click)="openModal(contenido)"
+        class="form-control mt-4 btn btn-primary"
+      >
+        Nuevo Producto
+      </button>
     </div>
-    <div class="form-group">
-      <label for="precio">Precio:</label>
-      <input type="number" class="form-control" id="precio" formControlName="precio" required>
+    <div class="form-group form-inline col-6 col-md-2 pb-3">
+      <button
+        type="button"
+        ngbAutofocus
+        class="form-control mt-4 btn btn-primary"
+      >
+        Exportar Excel
+      </button>
     </div>
-    <div class="form-group">
-      <label for="cantidad_stock">Cantidad en Stock:</label>
-      <input type="number" class="form-control" id="cantidad_stock" formControlName="cantidad_stock" required>
-    </div>
-    <div class="form-group">
-      <label for="categoria">Categoría:</label>
-      <input type="text" class="form-control" id="categoria" formControlName="categoria" required>
-    </div>
-    <button type="submit" class="btn btn-success">Guardar</button>
   </form>
+  <div style="height: 70%; overflow: scroll">
+    <table class="table table-striped osdo" aria-label="">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Codigo Corto</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad en Stock</th>
+          <th scope="col">Categoría</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos$ | async; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.codigo_corto }}</td>
+          <td>{{ producto.descripcion }}</td>
+          <td>{{ producto.precio }}</td>
+          <td>{{ producto.stock }}</td>
+          <td>{{ producto.categoria }}</td>
+          <td>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="editarProducto(producto,contenido)"
+            >
+              Editar
+            </button>
+            <button class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
+  <ng-template #contenido let-modal>
+    <form [formGroup]="productoForm" (submit)="guardarProducto()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="!editState" class="modal-title">Nuevo Producto</h4>
+          <h4 *ngIf="editState" class="modal-title">Editar Producto</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              formControlName="nombre"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="nombre">Codigo Corto:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codigoCorto"
+              formControlName="codigo_corto"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea
+              class="form-control"
+              id="descripcion"
+              formControlName="descripcion"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="precio">Precio:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="precio"
+              formControlName="precio"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="cantidad_stock">Cantidad en Stock:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="cantidad_stock"
+              formControlName="cantidad_stock"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="categoria"
+              formControlName="categoria"
+              required
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+
+
+
+
+  </ng-template>
 </div>
+
+
