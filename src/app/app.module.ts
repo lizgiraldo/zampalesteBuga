@@ -22,6 +22,7 @@ import { environment } from 'src/environments/environment';
 import { ProductoComponent } from './components/producto/producto.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FacturarComponent } from './components/facturar/facturar.component';
+import { NavbarComponent } from './shared/navbar/navbar.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { FacturarComponent } from './components/facturar/facturar.component';
     RecuperarPasswordComponent,
     SpinnerComponent,
     ProductoComponent,
-    FacturarComponent
+    FacturarComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
