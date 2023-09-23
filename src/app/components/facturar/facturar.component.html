@@ -44,7 +44,8 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="card border-left-success shadow h-100 py-2">
+          <div class="card border-left-success shadow h-100 py-2" (click)="openModal(template)">
+            <i class="text-center text-secondary">(click para ir a pagos)</i>
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -86,6 +87,27 @@
       </div>
     </div>
 </div>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Seleccione modo de Pago</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <select class="form-select col-3 form-select-lg my-3" aria-label=".form-select-lg example">
+      <option selected><h2>Efectivo</h2></option>
+      <option value="1"><h2>Nequi</h2></option>
+      <option value="2"><h2>QR</h2></option>
+      <option value="3"><h2>Tarjeta</h2></option>
+    </select>
+
+    <h2>Total a Pagar ${{totalGeneral|number}}</h2>
+      <button type="button" class="btn btn-primary" popover="Vivamus sagittis">LIstos Para pagar?</button>
+      <button type="button" class="btn btn-primary" tooltip="Vivamus sagittis">Pagar</button>
+  </div>
+</ng-template>
 
 
 </div>

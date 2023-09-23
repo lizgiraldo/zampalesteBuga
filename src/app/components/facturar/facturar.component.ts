@@ -5,7 +5,7 @@ import {
   FormBuilder,
   Validators,
 } from '@angular/forms';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, startWith, map } from 'rxjs';
 import { Producto } from 'src/app/models/producto.model';
@@ -32,6 +32,7 @@ export class FacturarComponent implements OnInit {
   totalGeneral = 0;
   codigoProducto: string = '';
   cantidadProductoSelecionado: number = 1;
+  modalRef!: BsModalRef;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -131,5 +132,14 @@ export class FacturarComponent implements OnInit {
 
     // Limpia el input después de agregar el producto
 
+  }
+
+  pasoPago(){
+
+  }
+
+  openModal(contenido:any){
+    this.modalRef = this.modalService.show(contenido);
+    this.editState = false;
   }
 }
