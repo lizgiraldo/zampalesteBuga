@@ -5,12 +5,16 @@ import { RegistrarUsuarioComponent } from './components/registrar-usuario/regist
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
 import { VerificarCorreoComponent } from './components/verificar-correo/verificar-correo.component';
+import { ProductoComponent } from './components/producto/producto.component';
+import { FacturarComponent } from './components/facturar/facturar.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
 {path: 'login', component: LoginComponent},
 {path: 'registrarUsuario', component: RegistrarUsuarioComponent},
 {path: 'dashboard', component: DashboardComponent},
+{path: 'productos', component: ProductoComponent},
+{path: 'facturar', component: FacturarComponent},
 {path: 'recuperarPassword', component: RecuperarPasswordComponent},
 {path: 'verificarCorreo', component: VerificarCorreoComponent},
   {path: '**', redirectTo: 'login', pathMatch:'full'},

@@ -1,0 +1,85 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-2">
+  <select class="form-select col-3 form-select-lg mb-3" aria-label=".form-select-lg example">
+    <option selected><h2>Facturación</h2></option>
+    <option value="1"><h2>Remisión</h2></option>
+  </select>
+  <div class="row">
+    <div class="card col-12 py-2">
+      <div class="card border-left-success shadow h-100 py-2 col-3 offset-md-9">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Venta Actual</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">${{totalGeneral|number}}</div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  <div class="row mt-2 m-0 p-0">
+    <div class="col-7 card p-2 m-2">
+      <h5>Productos</h5>
+      <form class="row">
+        <div class="form-group form-inline col-12 mb-3">
+          Buscar:
+          <input class="form-control" type="text" [formControl]="filter"  [(ngModel)]="codigoProducto" (keydown.enter)="agregarProductoPorCodigo($event)" />
+        </div>
+      </form>
+      <div style="height: 70%; overflow: scroll">
+        <table class="table table-striped osdo" aria-label="">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Codigo Corto</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let producto of productos$ | async; let i = index" (click)="agregarElemento(producto)">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ producto.nombre }}</td>
+              <td>{{ producto.codigo_corto }}</td>
+              <td>{{ producto.descripcion }}</td>
+              <td>{{ producto.precio |number }}</td>
+              <td>{{ producto.cantidad_stock }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card col-4 h-100 " style="overflow: scroll">
+      <h5>Productos agregados</h5>
+        <div class="mb-1" *ngFor="let producto of productosSeleccionados; let i = index">
+          <div class="card border-left-primary shadow">
+              <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                      <div class="col">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase">
+                            {{ producto.nombre }}</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ producto.precio|number }}</div>
+                          <div class="h6 mb-0 text-muted text-gray-800">Cantidad {{ producto.cantidad|number }}</div>
+                      </div>
+                      <div class="col-auto">
+                          <i class="fas fa-calendar fa-2x text-gray-800">Total</i>
+                          <h5>{{producto.total|number}}</h5>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+    </div>
+</div>
+
+
+</div>
