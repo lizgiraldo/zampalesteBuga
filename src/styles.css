@@ -32,3 +32,8 @@ html, body{
     .border-left-success {
       border-left: 0.25rem solid #1cc88a!important;
   }
+
+  .ajustar{
+    display:flex;
+    justify-content: space-between;
+  }

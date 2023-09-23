@@ -61,7 +61,7 @@ export class FacturarComponent implements OnInit {
     setTimeout(() => {
       /** spinner ends after 5 seconds */
       this.spinner.hide();
-    }, 3000);
+    }, 1500);
     this.loadProductos();
   }
 
@@ -98,7 +98,7 @@ export class FacturarComponent implements OnInit {
       productoExistente.total = productoExistente.cantidad * productoExistente.precio;
     } else {
       // Si el producto no existe en la lista, agrégalo con cantidad 1.
-      this.productosSeleccionados.push({...item, cantidad:1 ,total:item.precio });
+      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.precio });
     }
     this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
     this.cantidadProductoSelecionado=1;
