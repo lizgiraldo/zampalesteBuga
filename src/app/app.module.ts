@@ -26,6 +26,7 @@ import { FacturarComponent } from './components/facturar/facturar.component';
 //modulos de ngx
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    NgxSpinnerModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot()
   ],

@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, startWith, map } from 'rxjs';
 import { Producto } from 'src/app/models/producto.model';
 import { ProductoService } from 'src/app/services/producto.service';
@@ -35,7 +36,8 @@ export class FacturarComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private productoService: ProductoService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private spinner: NgxSpinnerService
   ) {
     this.selectedProducto = '';
 
@@ -54,6 +56,12 @@ export class FacturarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.spinner.show();
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide();
+    }, 3000);
     this.loadProductos();
   }
 

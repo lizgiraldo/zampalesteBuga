@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, startWith, map } from 'rxjs';
 import { Producto } from 'src/app/models/producto.model';
 import { ProductoService } from 'src/app/services/producto.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-producto',
@@ -25,6 +26,7 @@ export class ProductoComponent implements OnInit {
   productos: Producto[] = [];
   editingProducto: Producto | null = null;
   editState: boolean = false;
+  modalRef!: BsModalRef;
 
 
   constructor(
@@ -87,6 +89,8 @@ export class ProductoComponent implements OnInit {
           console.log('Producto actualizado con éxito');
           this.editingProducto = null;
           this.productoForm.reset();
+          this.mostrarMensaje();
+          this.modalRef.hide();
         });
       } else {
         // Agregar un nuevo producto
@@ -101,7 +105,7 @@ export class ProductoComponent implements OnInit {
   editarProducto(producto: Producto,contenido:any): void {
     this.editingProducto = producto;
     this.productoForm.patchValue(producto);
-    const modalRef = this.modalService.show(contenido);
+    this.modalRef = this.modalService.show(contenido);
     this.editState = true;
 
   }
@@ -113,9 +117,19 @@ export class ProductoComponent implements OnInit {
   }
 
   openModal(contenido:any){
-    const modalRef = this.modalService.show(contenido);
+    this.modalRef = this.modalService.show(contenido);
     this.productoForm.reset();
     this.editState = false;
+  }
+
+  mostrarMensaje(){
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Your work has been saved',
+      showConfirmButton: false,
+      timer: 1500
+    })
   }
 
 }
