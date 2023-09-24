@@ -6,40 +6,46 @@
     <option value="1"><h2>Remisión</h2></option>
   </select>
   <div class="row ensayo mt-2">
-
     <div class="card col-5">
-          <h5>Vendedor</h5>
-          <select class="form-select col-3 form-select-lg my-3" aria-label=".form-select-lg example">
-            <option selected><h2>oscar </h2></option>
-            <option value="1"><h2>Lizeth</h2></option>
-          </select>
+      <h5>Vendedor</h5>
+      <select
+        class="form-select col-3 form-select-lg my-3"
+        aria-label=".form-select-lg example"
+      >
+        <option selected><h2>oscar</h2></option>
+        <option value="1"><h2>Lizeth</h2></option>
+      </select>
 
-
-      <h5>Productos agregados</h5>
+      <h5 *ngIf="productosSeleccionados.length >0">Productos agregados</h5>
       <div class="tabla-contenedor">
-        <div class="mb-1" *ngFor="let producto of productosSeleccionados; let i = index">
+        <div
+          class="mb-1"
+          *ngFor="let producto of productosSeleccionados; let i = index">
           <div class="card border-left-primary shadow">
-              <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                      <div class="col">
-                          <div class="text-xs font-weight-bold text-primary text-uppercase">
-                            {{ producto.nombre }}</div>
-                          <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ producto.precio|number }}</div>
-                          <div class="h6 mb-0 text-muted text-gray-800">Cantidad {{ producto.cantidad|number }}</div>
-                      </div>
-                      <div class="col-auto">
-                          <i class="fas fa-calendar fa-2x text-gray-800">Total</i>
-                          <h5>{{producto.total|number}}</h5>
-                      </div>
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col">
+                  <div
+                    class="text-xs font-weight-bold text-primary text-uppercase"
+                  >
+                    {{ producto.nombre }}
                   </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    $ {{ producto.precio | number }}
+                  </div>
+                  <div class="h6 mb-0 text-muted text-gray-800">
+                    Cantidad {{ producto.cantidad | number }}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-calendar fa-2x text-gray-800">Total</i>
+                  <h5>{{ producto.total | number }}</h5>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
       </div>
-
-      </div>
-
-
-
     </div>
     <div class="col-7 card">
       <h5>Productos</h5>
@@ -47,25 +53,41 @@
         <div class="col-6">
           <div class="form-group form-inline col-12 mb-3">
             Buscar:
-            <input class="form-control" type="text" [formControl]="filter"  [(ngModel)]="codigoProducto" (keydown.enter)="agregarProductoPorCodigo($event)" />
+            <input
+              class="form-control"
+              type="text"
+              [formControl]="filter"
+              [(ngModel)]="codigoProducto"
+              (keydown.enter)="agregarProductoPorCodigo($event)"
+            />
           </div>
         </div>
         <div class="col-6">
-          <div class="card border-left-success shadow h-100 py-2" (click)="openModal(template)">
-            <i class="text-center text-secondary f-10">(click para ir a pagos)</i>
+          <div
+            class="card border-left-success shadow h-100 py-2"
+            (click)="openModal(template)"
+          >
+            <i class="text-center text-secondary f-10"
+              >(click para ir a pagos)</i
+            >
             <div class="card-body pt-0 pb-0">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Venta Actual</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">${{totalGeneral|number}}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div
+                    class="text-xs font-weight-bold text-success text-uppercase mb-1"
+                  >
+                    Venta Actual
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    ${{ totalGeneral | number }}
+                  </div>
                 </div>
+                <div class="col-auto">
+                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
         </div>
       </form>
       <div class="tabla-contenedor">
@@ -81,40 +103,53 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let producto of productos$ | async; let i = index" (click)="agregarElemento(producto)">
+            <tr
+              *ngFor="let producto of productos$ | async; let i = index"
+              (click)="agregarElemento(producto)"
+            >
               <th scope="row">{{ i + 1 }}</th>
               <td>{{ producto.nombre }}</td>
               <td>{{ producto.codigo_corto }}</td>
               <td>{{ producto.descripcion }}</td>
-              <td>{{ producto.precio |number }}</td>
+              <td>{{ producto.precio | number }}</td>
               <td>{{ producto.cantidad_stock }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-</div>
-
-<ng-template #template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Seleccione modo de Pago</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
-    </button>
   </div>
-  <div class="modal-body">
-    <select class="form-select col-3 form-select-lg my-3" aria-label=".form-select-lg example">
-      <option selected><h2>Efectivo</h2></option>
-      <option value="1"><h2>Nequi</h2></option>
-      <option value="2"><h2>QR</h2></option>
-      <option value="3"><h2>Tarjeta</h2></option>
-    </select>
 
-    <h2>Total a Pagar ${{totalGeneral|number}}</h2>
-      <button type="button" class="btn btn-primary" popover="Vivamus sagittis">LIstos Para pagar?</button>
-      <button type="button" class="btn btn-primary" tooltip="Vivamus sagittis">Pagar</button>
-  </div>
-</ng-template>
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Seleccione modo de Pago</h4>
+      <button
+        type="button"
+        class="btn-close close pull-right"
+        aria-label="Close"
+        (click)="modalRef?.hide()"
+      >
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <select
+        class="form-select col-3 form-select-lg my-3"
+        aria-label=".form-select-lg example"
+      >
+        <option selected><h2>Efectivo</h2></option>
+        <option value="1"><h2>Nequi</h2></option>
+        <option value="2"><h2>QR</h2></option>
+        <option value="3"><h2>Tarjeta</h2></option>
+      </select>
 
-
+      <h2>Total a Pagar ${{ totalGeneral | number }}</h2>
+      <button type="button" class="btn btn-primary" popover="Vivamus sagittis">
+        LIstos Para pagar?
+      </button>
+      <button type="button" class="btn btn-primary" tooltip="Vivamus sagittis">
+        Pagar
+      </button>
+    </div>
+  </ng-template>
 </div>
