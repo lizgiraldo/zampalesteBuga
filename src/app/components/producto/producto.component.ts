@@ -75,7 +75,7 @@ export class ProductoComponent implements OnInit {
     return this.productos.filter((place: Producto) => {
       const term = text.toLowerCase();
       return place.nombre.toLowerCase().includes(term) ||
-      place.categoria.toLowerCase().includes(term);
+      place.descripcion.toLowerCase().includes(term);
     });
   }
 

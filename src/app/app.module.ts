@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 //Modulos
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +29,7 @@ import { FacturarComponent } from './components/facturar/facturar.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import {CollapseModule}from 'ngx-bootstrap/collapse';
 import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
 
 
@@ -46,13 +49,15 @@ import { IngresarFacturasComponent } from './components/ingresar-facturas/ingres
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     NgxSpinnerModule,
     ModalModule.forRoot(),
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

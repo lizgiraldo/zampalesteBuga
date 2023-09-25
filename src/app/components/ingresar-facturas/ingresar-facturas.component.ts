@@ -16,7 +16,7 @@ export class IngresarFacturasComponent implements OnInit {
   productosSeleccionados: any[] = []; // Array de productos seleccionados con detalles
   busqueda: string = ''; // Campo de búsqueda
   productoForm: FormGroup; // FormGroup para agregar detalles al producto
-
+isCollapsed=true;
 
   constructor(private movimientoService: MovimientoService,
               private productoService:ProductoService,
@@ -44,7 +44,7 @@ export class IngresarFacturasComponent implements OnInit {
       this.productosSeleccionados.push({
         producto,
         detalles: this.productoForm.value,
-        mostrarDetalles: false, // Agrega esta propiedad para controlar la visibilidad de los detalles
+        mostrarDetalles: true, // Agrega esta propiedad para controlar la visibilidad de los detalles
       });
     }
   }
@@ -58,7 +58,7 @@ export class IngresarFacturasComponent implements OnInit {
     }
   }
 
-  toggleDetalles(productoSeleccionado: any) {
+  toggleCollapse(productoSeleccionado: any) {
     productoSeleccionado.mostrarDetalles = !productoSeleccionado.mostrarDetalles;
   }
 

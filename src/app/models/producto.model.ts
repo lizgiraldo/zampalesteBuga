@@ -4,17 +4,16 @@ export interface Producto {
   codigo_corto:string
   nombre: string;
   descripcion: string;
-  precio: number;
-  cantidad_stock: number;
-  categoria: string; // Puedes cambiar este tipo según cómo hayas modelado las categorías
-  fecha_creacion: any; // Puedes usar `firebase.firestore.Timestamp` o `Date` según tus preferencias
-
-  unidadDeMedida: string;
-  precioCompra: number;
   precioVenta: number;
+  precioCompra: number;
+  cantidadStock: number;
+  fecha_creacion: any; // Puedes usar `firebase.firestore.Timestamp` o `Date` según tus preferencias
   stockInicial: number;
   stockMinimo?: number;
   stockMaximo?: number;
-  fechaIngreso: any; // Firestore maneja las fechas como objetos 'Timestamp'
-  notas?: string;
+  insumos:boolean;
+  codigoInsumo?:string;
+  cantidadInsumo?:number;
 }
+
+

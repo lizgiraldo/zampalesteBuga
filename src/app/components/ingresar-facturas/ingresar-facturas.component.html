@@ -1,54 +1,52 @@
 <div class="container">
   <h2>Ingresar Facturas</h2>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <h3>Productos Disponibles</h3>
       <ul class="list-group">
+        <!-- Aquí puedes mostrar la lista de productos disponibles -->
         <li *ngFor="let producto of productos" class="list-group-item d-flex justify-content-between align-items-center">
           {{ producto.nombre }}
           <button class="btn btn-primary" (click)="agregarProducto(producto)">Agregar</button>
         </li>
       </ul>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h3>Productos Seleccionados</h3>
-      <ul class="list-group">
-        <li *ngFor="let productoSeleccionado of productosSeleccionados" class="list-group-item">
-          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-            {{ productoSeleccionado.producto.nombre }}</div>
-          <div *ngIf="productoSeleccionado.mostrarDetalles" class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-              <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                  <div class="form-group">
-                    <div class="row g-3">
-                      <div class="col-sm-2">
-                        <label for="cantidad">Cantidad:</label>
-                        <input type="number" class="form-control" id="cantidad" formControlName="cantidad">
-                      </div>
-                      <div class="col-sm">
-                        <label for="precio">Precio:</label>
-                        <input type="number" class="form-control" id="precio" formControlName="precio">
-                      </div>
-                      <div class="col-sm">
-                        <label for="otrosCampos">Otros Campos:</label>
-                        <input type="text" class="form-control" id="otrosCampos" formControlName="otrosCampos">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-auto">
-                  <button class="btn btn-danger" (click)="eliminarProducto(productoSeleccionado)">Eliminar</button>
-                </div>
-              </div>
+      <!-- Utiliza *ngFor para mostrar los productos seleccionados como cards colapsables -->
+      <div class="card shadow mb-1" *ngFor="let productoSeleccionado of productosSeleccionados">
+        <div class="card">
+          <div class="card-header" (click)="toggleCollapse(productoSeleccionado)">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">
+                <button class="btn text-xs font-weight-bold text-success text-uppercase mb-1" type="button" [attr.aria-expanded]="productoSeleccionado.mostrarDetalles" [attr.aria-controls]="'collapseCard' + productoSeleccionado.id">
+                  {{ productoSeleccionado.producto.nombre }}
+                </button>
+              </h5>
+              <button class="btn btn-danger" (click)="eliminarProducto(productoSeleccionado)">Eliminar</button>
             </div>
           </div>
-          <!-- Botón para mostrar/ocultar detalles -->
-          <button class="btn btn-secondary mt-2" (click)="toggleDetalles(productoSeleccionado)">
-            {{ productoSeleccionado.mostrarDetalles ? 'Ocultar Detalles' : 'Mostrar Detalles' }}
-          </button>
-        </li>
-      </ul>
+          <div [id]="'collapseCard' + productoSeleccionado.id" [collapse]="productoSeleccionado.mostrarDetalles">
+            <div class="card-body">
+              <!-- Agrega los campos de cantidad, precio y otros aquí -->
+              <form [formGroup]="productoSeleccionado.detalles">
+                <div class="form-group">
+                  <label for="cantidad">Cantidad:</label>
+                  <input type="number" class="form-control" id="cantidad" formControlName="cantidad">
+                </div>
+                <div class="form-group">
+                  <label for="precio">Precio:</label>
+                  <input type="number" class="form-control" id="precio" formControlName="precio">
+                </div>
+                <div class="form-group">
+                  <label for="otrosCampos">Otros Campos:</label>
+                  <input type="text" class="form-control" id="otrosCampos" formControlName="otrosCampos">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
       <button class="btn btn-success mt-3" (click)="guardarMovimientos()">Guardar Movimientos</button>
     </div>
   </div>
