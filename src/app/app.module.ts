@@ -27,6 +27,7 @@ import { FacturarComponent } from './components/facturar/facturar.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     SpinnerComponent,
     ProductoComponent,
     FacturarComponent,
-    NavbarComponent
+    NavbarComponent,
+    IngresarFacturasComponent
   ],
   imports: [
     BrowserModule,
