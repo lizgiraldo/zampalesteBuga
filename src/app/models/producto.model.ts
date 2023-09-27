@@ -8,12 +8,11 @@ export interface Producto {
   precioCompra: number;
   cantidadStock: number;
   fecha_creacion: any; // Puedes usar `firebase.firestore.Timestamp` o `Date` según tus preferencias
-  stockInicial: number;
   stockMinimo?: number;
-  stockMaximo?: number;
   insumos:boolean;
   codigoInsumo?:string;
   cantidadInsumo?:number;
+  estado:boolean;
 }
 
 

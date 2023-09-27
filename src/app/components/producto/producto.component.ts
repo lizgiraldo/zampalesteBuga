@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, startWith, map } from 'rxjs';
-import { Producto } from 'src/app/models/producto.model';
+import { Producto } from 'src/app/models/producto.model'; // Importa el modelo Producto
 import { ProductoService } from 'src/app/services/producto.service';
 import Swal from 'sweetalert2';
 
@@ -12,9 +12,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./producto.component.css']
 })
 export class ProductoComponent implements OnInit {
-
-
-
   productos$!: Observable<Producto[]>;
   selectedProducto: any;
   time: string = '';
@@ -28,37 +25,37 @@ export class ProductoComponent implements OnInit {
   editState: boolean = false;
   modalRef!: BsModalRef;
 
-
   constructor(
     private formBuilder: FormBuilder,
     private productoService: ProductoService,
     private modalService: BsModalService
   ) {
     this.productoForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
       codigo_corto: ['', Validators.required],
+      nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      precio: [0, [Validators.required, Validators.min(0)]],
-      cantidad_stock: [0, [Validators.required, Validators.min(0)]],
-      categoria: ['', Validators.required],
-      imagen: ['']
+      precioVenta: [0],
+      precioCompra: [0],
+      cantidadStock: [0],
+      stockMinimo: [0],
+      insumos: [false],
+      codigoInsumo: [''],
+      cantidadInsumo: [0],
+      estado: [true]
     });
 
     this.selectedProducto = '';
 
-    this.productoService.getProductos()
-      .subscribe((obj: any) => {
-        this.productos = obj;
-        this.productos$ = this.filter.valueChanges.pipe(
-          startWith(''),
-          map(text => this.search(text))
-        );
-      },
-        (errorData: any) => {
-
-          console.log(errorData);
-        }
+    this.productoService.getProductos().subscribe((productos) => {
+      this.productos = productos;
+      this.productos$ = this.filter.valueChanges.pipe(
+        startWith(''),
+        map(text => this.search(text))
       );
+    },
+    (errorData: any) => {
+      console.log(errorData);
+    });
   }
 
   ngOnInit(): void {
@@ -72,10 +69,12 @@ export class ProductoComponent implements OnInit {
   }
 
   search(text: any): Producto[] {
-    return this.productos.filter((place: Producto) => {
+    return this.productos.filter((producto: Producto) => {
       const term = text.toLowerCase();
-      return place.nombre.toLowerCase().includes(term) ||
-      place.descripcion.toLowerCase().includes(term);
+      return (
+        producto.nombre.toLowerCase().includes(term) ||
+        producto.descripcion.toLowerCase().includes(term)
+      );
     });
   }
 
@@ -85,7 +84,10 @@ export class ProductoComponent implements OnInit {
 
       if (this.editingProducto) {
         // Editar un producto existente
-        this.productoService.updateProducto(this.editingProducto.id+"", productoData).then(() => {
+        this.productoService.updateProducto(
+          this.editingProducto.id || '', // Asegúrate de obtener el ID correctamente
+          productoData
+        ).then(() => {
           console.log('Producto actualizado con éxito');
           this.editingProducto = null;
           this.productoForm.reset();
@@ -102,12 +104,11 @@ export class ProductoComponent implements OnInit {
     }
   }
 
-  editarProducto(producto: Producto,contenido:any): void {
+  editarProducto(producto: Producto, contenido: any): void {
     this.editingProducto = producto;
     this.productoForm.patchValue(producto);
     this.modalRef = this.modalService.show(contenido);
     this.editState = true;
-
   }
 
   eliminarProducto(id: string): void {
@@ -116,20 +117,19 @@ export class ProductoComponent implements OnInit {
     });
   }
 
-  openModal(contenido:any){
+  openModal(contenido: any) {
     this.modalRef = this.modalService.show(contenido);
     this.productoForm.reset();
     this.editState = false;
   }
 
-  mostrarMensaje(){
+  mostrarMensaje() {
     Swal.fire({
       position: 'top-end',
       icon: 'success',
       title: 'Your work has been saved',
       showConfirmButton: false,
       timer: 1500
-    })
+    });
   }
-
 }

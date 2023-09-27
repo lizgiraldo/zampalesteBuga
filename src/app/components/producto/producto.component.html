@@ -1,8 +1,9 @@
 <app-navbar></app-navbar>
-<div class="container mt-5">
+
+<div class="container-fluid mx-3 mt-5">
   <h2>Lista de Productos</h2>
 
-  <form class="row">
+  <form class="row mx-2">
     <div class="form-group form-inline col-12 col-md-8">
       Buscar: <input class="form-control" type="text" [formControl]="filter" />
     </div>
@@ -32,11 +33,12 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Nombre</th>
-          <th scope="col">Codigo Corto</th>
+          <th scope="col">Cod Corto</th>
           <th scope="col">Descripción</th>
-          <th scope="col">Precio</th>
-          <th scope="col">Cantidad en Stock</th>
-          <th scope="col">Categoría</th>
+          <th scope="col">Precio Venta</th>
+          <th scope="col">Precio Compra</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Stock Mín</th>
           <th scope="col">Acciones</th>
         </tr>
       </thead>
@@ -47,12 +49,13 @@
           <td>{{ producto.codigo_corto }}</td>
           <td>{{ producto.descripcion }}</td>
           <td>{{ producto.precioVenta }}</td>
+          <td>{{ producto.precioCompra }}</td>
           <td>{{ producto.cantidadStock }}</td>
           <td>{{ producto.stockMinimo }}</td>
           <td>
             <button
               class="btn btn-primary btn-sm"
-              (click)="editarProducto(producto,contenido)"
+              (click)="editarProducto(producto, contenido)"
             >
               Editar
             </button>
@@ -71,25 +74,37 @@
           <h4 *ngIf="editState" class="modal-title">Editar Producto</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nombre"
-              formControlName="nombre"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="nombre">Codigo Corto:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="codigoCorto"
-              formControlName="codigo_corto"
-              required
-            />
+          <div class="row">
+            <div class="form-group col-6">
+              <label for="nombre">Nombre:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombre"
+                formControlName="nombre"
+                required
+              />
+            </div>
+            <div class="form-group col-3">
+              <label for="codigo_corto">Cod Corto:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="codigo_corto"
+                formControlName="codigo_corto"
+                required
+              />
+            </div>
+            <div class="form-group col-md-3">
+              <label for="stockMinimo">Stock Mín:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="stockMinimo"
+                formControlName="stockMinimo"
+              />
+            </div>
+
           </div>
           <div class="form-group">
             <label for="descripcion">Descripción:</label>
@@ -100,49 +115,46 @@
               required
             ></textarea>
           </div>
-          <div class="form-group">
-            <label for="precio">Precio:</label>
-            <input
-              type="number"
-              class="form-control"
-              id="precio"
-              formControlName="precio"
-              required
-            />
+          <div class="form-group mt-1">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="insumos" formControlName="insumos">
+              <label class="form-check-label" for="insumos">
+                ¿Necesita Insumo?
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="cantidad_stock">Cantidad en Stock:</label>
-            <input
-              type="number"
-              class="form-control"
-              id="cantidad_stock"
-              formControlName="cantidad_stock"
-              required
-            />
+          <div *ngIf="productoForm.get('insumos')?.value">
+            <div class="row">
+            <div class="form-group col-md-6">
+              <label for="codigoInsumo">Código de Insumo:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="codigoInsumo"
+                formControlName="codigoInsumo"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cantidadInsumo">Cantidad de Insumo:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="cantidadInsumo"
+                formControlName="cantidadInsumo"
+              />
+            </div>
           </div>
-          <div class="form-group">
-            <label for="categoria">Categoría:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="categoria"
-              formControlName="categoria"
-              required
-            />
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Save changes</button>
-          <button type="submit" class="btn btn-success">Guardar</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Cerrar</button>
         </div>
       </div>
     </form>
-
-
-
-
   </ng-template>
+
+
+
+
 </div>
-
-
