@@ -1,53 +1,148 @@
-<div class="container">
-  <h2>Ingresar Facturas</h2>
+<app-navbar></app-navbar>
+<div class="container mt-4">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <h3>Productos Disponibles</h3>
-      <ul class="list-group">
-        <!-- Aquí puedes mostrar la lista de productos disponibles -->
-        <li *ngFor="let producto of productos" class="list-group-item d-flex justify-content-between align-items-center">
-          {{ producto.nombre }}
-          <button class="btn btn-primary" (click)="agregarProducto(producto)">Agregar</button>
-        </li>
-      </ul>
+      <form class="row">
+        <div class="form-group form-inline col-12">
+          Buscar: <input class="form-control" type="text" [formControl]="filter" />
+        </div>
+      </form>
+      <div *ngFor="let producto of productos$ | async" class="my-1">
+        <div class="card border-left-success shadow h-100 py-1">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        {{ producto.nombre }}</div>
+                  </div>
+                  <div class="col-auto">
+                    <button class="btn btn-primary btn-sm" (click)="seleccionarProducto(producto)">
+                    Agregar
+                  </button>
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
     </div>
-    <div class="col-md-6">
-      <h3>Productos Seleccionados</h3>
-      <!-- Utiliza *ngFor para mostrar los productos seleccionados como cards colapsables -->
-      <div class="card shadow mb-1" *ngFor="let productoSeleccionado of productosSeleccionados">
+    <div class="col-md-8">
+      <h3>Producto Seleccionado</h3>
+      <div class="card shadow mb-1">
         <div class="card">
-          <div class="card-header" (click)="toggleCollapse(productoSeleccionado)">
+          <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">
-                <button class="btn text-xs font-weight-bold text-success text-uppercase mb-1" type="button" [attr.aria-expanded]="productoSeleccionado.mostrarDetalles" [attr.aria-controls]="'collapseCard' + productoSeleccionado.id">
-                  {{ productoSeleccionado.producto.nombre }}
-                </button>
-              </h5>
-              <button class="btn btn-danger" (click)="eliminarProducto(productoSeleccionado)">Eliminar</button>
+              <h5 class="mb-0">{{productoSeleccionado.nombre}}</h5>
+              <button class="btn btn-danger">Eliminar</button>
             </div>
           </div>
-          <div [id]="'collapseCard' + productoSeleccionado.id" [collapse]="productoSeleccionado.mostrarDetalles">
-            <div class="card-body">
-              <!-- Agrega los campos de cantidad, precio y otros aquí -->
-              <form [formGroup]="productoSeleccionado.detalles">
-                <div class="form-group">
+          <div class="card-body">
+            <form [formGroup]="productoForm">
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <label for="precioCompra">Precio de Compra:</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="precioCompra"
+                    formControlName="precioCompra"
+                  />
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="precioVenta">Precio de Venta:</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="precioVenta"
+                    formControlName="precioVenta"
+                  />
+                </div>
+                <div class="form-group col-md-4">
                   <label for="cantidad">Cantidad:</label>
-                  <input type="number" class="form-control" id="cantidad" formControlName="cantidad">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="cantidad"
+                    formControlName="cantidad"
+                  />
                 </div>
-                <div class="form-group">
-                  <label for="precio">Precio:</label>
-                  <input type="number" class="form-control" id="precio" formControlName="precio">
-                </div>
-                <div class="form-group">
-                  <label for="otrosCampos">Otros Campos:</label>
-                  <input type="text" class="form-control" id="otrosCampos" formControlName="otrosCampos">
-                </div>
-              </form>
-            </div>
+              </div>
+              <button
+                class="btn btn-primary mt-2"
+                (click)="agregarProductoSeleccionado()"
+              >
+                Agregar Producto
+              </button>
+              <!-- <button
+                class="btn btn-secondary mt-2"
+                (click)="guardarCambiosProducto()"
+              >
+                Guardar Cambios
+              </button> -->
+            </form>
           </div>
         </div>
       </div>
-      <button class="btn btn-success mt-3" (click)="guardarMovimientos()">Guardar Movimientos</button>
+      <div class="row" *ngIf="productosSeleccionados.length > 0">
+        <div class="col-md-12">
+          <h3>Productos Seleccionados</h3>
+          <!-- Tabla de productos seleccionados -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Precio Compra</th>
+                <th>Precio Venta</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let producto of productosSeleccionados; let i = index">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.precioCompra |number}}</td>
+                <td>{{ producto.precioVenta |number }}</td>
+                <td>{{ producto.cantidadStock }}</td>
+                <td>
+                  <!-- <button
+                    class="btn btn-warning btn-sm mx-1"
+                    (click)="editarProductoSeleccionado(i)"
+                  >
+                    Editar
+                  </button> -->
+                  <button
+                    class="btn btn-danger btn-sm"
+                    (click)="eliminarProductoSeleccionado(i)"
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <!-- Botón para agregar movimiento de inventario -->
+      <div *ngIf="productosSeleccionados.length > 0">
+        <h3>Agregar Movimiento de Inventario</h3>
+        <div class="form-group">
+          <label for="facturaNumero">Número de Factura:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="facturaNumero"
+            formControlName="facturaNumero"
+          />
+        </div>
+        <button class="btn btn-success mt-2" (click)="agregarMovimientoInventario()">
+          Agregar Movimiento
+        </button>
+      </div>
     </div>
   </div>
 </div>

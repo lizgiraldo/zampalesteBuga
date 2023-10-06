@@ -5,7 +5,7 @@ import { Observable, startWith, map } from 'rxjs';
 import { Producto } from 'src/app/models/producto.model'; // Importa el modelo Producto
 import { ProductoService } from 'src/app/services/producto.service';
 import Swal from 'sweetalert2';
-
+import * as Papa from 'papaparse';
 @Component({
   selector: 'app-producto',
   templateUrl: './producto.component.html',
@@ -131,5 +131,40 @@ export class ProductoComponent implements OnInit {
       showConfirmButton: false,
       timer: 1500
     });
+  }
+
+  descargarCSV() {
+
+    // Encabezados del CSV
+  const encabezados = ['Nombre', 'Precio Compra', 'Cantidad Stock'];
+
+    const datosParaCSV = this.productos.map(producto => {
+      return {
+        nombre: producto.nombre,
+        precioCompra: producto.precioCompra,
+        cantidadStock: producto.cantidadStock
+        // Agrega otros campos según sea necesario
+      };
+    });
+    const arrayDatos = datosParaCSV.map(producto => [producto.nombre, producto.precioCompra, producto.cantidadStock]);
+
+  // Agregar los encabezados al principio del array de datos
+  arrayDatos.unshift(encabezados);
+
+    // Convierte datosParaCSV en formato CSV usando Papa.unparse() con punto y coma como separador
+    const csvData = Papa.unparse(arrayDatos, {
+      header: false, // Indica que los encabezados ya están incluidos en los datos
+      delimiter: ';' // Establece el punto y coma como separador de campo
+    });
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const fileName = `reporte_${currentDate}.csv`;
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
