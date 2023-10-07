@@ -32,3 +32,24 @@ html, body{
     .border-left-success {
       border-left: 0.25rem solid #1cc88a!important;
   }
+
+  .ajustar{
+    display:flex;
+    justify-content: space-between;
+  }
+
+  .f-10 {
+    font-size: 10px; /* Ajusta el tamaño de fuente según tus necesidades */
+  }
+
+  .tabla-contenedor {
+    max-height: 300px; /* Altura máxima de la tabla con scroll */
+    overflow-y: auto; /* Agrega una barra de desplazamiento vertical cuando sea necesario */
+  }
+
+  .quiet-head {
+    position: sticky;
+    top: 0; /* Encabezados pegajosos en la parte superior */
+    background-color: #fff; /* Fondo blanco para ocultar los encabezados debajo */
+    z-index: 1; /* Asegura que los encabezados estén en la parte superior */
+  }

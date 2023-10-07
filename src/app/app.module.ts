@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 //Modulos
 import { AppRoutingModule } from './app-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire/compat';
 
 
@@ -16,7 +18,7 @@ import { RegistrarUsuarioComponent } from './components/registrar-usuario/regist
 import { VerificarCorreoComponent } from './components/verificar-correo/verificar-correo.component';
 import { RecuperarPasswordComponent } from './components/recuperar-password/recuperar-password.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
-
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 import { ProductoComponent } from './components/producto/producto.component';
@@ -27,6 +29,9 @@ import { FacturarComponent } from './components/facturar/facturar.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import {CollapseModule}from 'ngx-bootstrap/collapse';
+import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
+import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
 
 
 @NgModule({
@@ -40,17 +45,23 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     SpinnerComponent,
     ProductoComponent,
     FacturarComponent,
-    NavbarComponent
+    NavbarComponent,
+    IngresarFacturasComponent,
+    VerMovimientosComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    FormsModule,
     NgxSpinnerModule,
     ModalModule.forRoot(),
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    PaginationModule.forRoot(),
+    CollapseModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

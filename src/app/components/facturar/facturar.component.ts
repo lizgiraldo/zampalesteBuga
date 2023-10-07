@@ -5,7 +5,7 @@ import {
   FormBuilder,
   Validators,
 } from '@angular/forms';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, startWith, map } from 'rxjs';
 import { Producto } from 'src/app/models/producto.model';
@@ -32,6 +32,7 @@ export class FacturarComponent implements OnInit {
   totalGeneral = 0;
   codigoProducto: string = '';
   cantidadProductoSelecionado: number = 1;
+  modalRef!: BsModalRef;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -61,7 +62,7 @@ export class FacturarComponent implements OnInit {
     setTimeout(() => {
       /** spinner ends after 5 seconds */
       this.spinner.hide();
-    }, 3000);
+    }, 1500);
     this.loadProductos();
   }
 
@@ -95,10 +96,10 @@ export class FacturarComponent implements OnInit {
 
     if (productoExistente) {
       productoExistente.cantidad += this.cantidadProductoSelecionado;
-      productoExistente.total = productoExistente.cantidad * productoExistente.precio;
+      productoExistente.total = productoExistente.cantidad * productoExistente.precioVenta;
     } else {
       // Si el producto no existe en la lista, agrégalo con cantidad 1.
-      this.productosSeleccionados.push({...item, cantidad:1 ,total:item.precio });
+      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.precioVenta });
     }
     this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
     this.cantidadProductoSelecionado=1;
@@ -126,10 +127,22 @@ export class FacturarComponent implements OnInit {
       this.codigoProducto = '';
 
     }else{
-      console.log("No se pudo agregar el producto.");
+      this.cantidadProductoSelecionado=1;
+      this.agregarElemento(productoEncontrado);
+      this.codigoProducto = '';
+      console.log("Se agregar elemento con valor de 1");
     }
 
     // Limpia el input después de agregar el producto
 
+  }
+
+  pasoPago(){
+
+  }
+
+  openModal(contenido:any){
+    this.modalRef = this.modalService.show(contenido);
+    this.editState = false;
   }
 }

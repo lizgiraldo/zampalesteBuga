@@ -7,6 +7,8 @@ import { RecuperarPasswordComponent } from './components/recuperar-password/recu
 import { VerificarCorreoComponent } from './components/verificar-correo/verificar-correo.component';
 import { ProductoComponent } from './components/producto/producto.component';
 import { FacturarComponent } from './components/facturar/facturar.component';
+import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
+import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
@@ -15,6 +17,8 @@ const routes: Routes = [
 {path: 'dashboard', component: DashboardComponent},
 {path: 'productos', component: ProductoComponent},
 {path: 'facturar', component: FacturarComponent},
+{path: 'movimientos', component: VerMovimientosComponent},
+{path: 'ingresarFacturas', component: IngresarFacturasComponent},
 {path: 'recuperarPassword', component: RecuperarPasswordComponent},
 {path: 'verificarCorreo', component: VerificarCorreoComponent},
   {path: '**', redirectTo: 'login', pathMatch:'full'},
