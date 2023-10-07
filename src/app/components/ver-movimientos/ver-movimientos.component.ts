@@ -19,7 +19,7 @@ export class VerMovimientosComponent implements OnInit {
     private movimientoService: MovimientoService,) { }
 
   ngOnInit(): void {
-
+      //prueba github
   }
 
 
