@@ -96,10 +96,10 @@ export class FacturarComponent implements OnInit {
 
     if (productoExistente) {
       productoExistente.cantidad += this.cantidadProductoSelecionado;
-      productoExistente.total = productoExistente.cantidad * productoExistente.precio;
+      productoExistente.total = productoExistente.cantidad * productoExistente.precioVenta;
     } else {
       // Si el producto no existe en la lista, agrégalo con cantidad 1.
-      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.precio });
+      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.precioVenta });
     }
     this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
     this.cantidadProductoSelecionado=1;
@@ -127,7 +127,10 @@ export class FacturarComponent implements OnInit {
       this.codigoProducto = '';
 
     }else{
-      console.log("No se pudo agregar el producto.");
+      this.cantidadProductoSelecionado=1;
+      this.agregarElemento(productoEncontrado);
+      this.codigoProducto = '';
+      console.log("Se agregar elemento con valor de 1");
     }
 
     // Limpia el input después de agregar el producto

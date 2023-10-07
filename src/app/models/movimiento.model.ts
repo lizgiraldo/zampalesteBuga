@@ -7,4 +7,6 @@ export interface MovimientoInventario {
   comentario?: string;
   factura_numero:string;
   precio:number;
+  proveedor:string;
+  metodoPago:string;
 }

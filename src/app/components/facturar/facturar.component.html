@@ -31,7 +31,7 @@
                     {{ producto.nombre }}
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    $ {{ producto.precio | number }}
+                    $ {{ producto.precioVenta | number }}
                   </div>
                   <div class="h6 mb-0 text-muted text-gray-800">
                     Cantidad {{ producto.cantidad | number }}
@@ -127,7 +127,7 @@
         type="button"
         class="btn-close close pull-right"
         aria-label="Close"
-        (click)="modalRef?.hide()"
+        (click)="modalRef.hide()"
       >
         <span aria-hidden="true" class="visually-hidden">&times;</span>
       </button>

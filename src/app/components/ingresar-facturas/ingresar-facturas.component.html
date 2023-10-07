@@ -1,13 +1,15 @@
 <app-navbar></app-navbar>
+<form [formGroup]="productoForm">
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-4">
-      <h3>Productos Disponibles</h3>
+      <h5>Productos Disponibles</h5>
       <form class="row">
         <div class="form-group form-inline col-12">
           Buscar: <input class="form-control" type="text" [formControl]="filter" />
         </div>
       </form>
+      <div class="tabla-contenedor">
       <div *ngFor="let producto of productos$ | async" class="my-1">
         <div class="card border-left-success shadow h-100 py-1">
           <div class="card-body">
@@ -27,20 +29,19 @@
       </div>
       </div>
     </div>
+    </div>
     <div class="col-md-8">
-      <h3>Producto Seleccionado</h3>
       <div class="card shadow mb-1">
         <div class="card">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="mb-0">{{productoSeleccionado.nombre}}</h5>
-              <button class="btn btn-danger">Eliminar</button>
+              TOTAL FACTURA: ${{totalPrecioCompra|number}}
             </div>
           </div>
           <div class="card-body">
-            <form [formGroup]="productoForm">
               <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label for="precioCompra">Precio de Compra:</label>
                   <input
                     type="number"
@@ -49,7 +50,7 @@
                     formControlName="precioCompra"
                   />
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label for="precioVenta">Precio de Venta:</label>
                   <input
                     type="number"
@@ -58,7 +59,7 @@
                     formControlName="precioVenta"
                   />
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label for="cantidad">Cantidad:</label>
                   <input
                     type="number"
@@ -67,26 +68,27 @@
                     formControlName="cantidad"
                   />
                 </div>
-              </div>
-              <button
+                <div class="form-group col-md-3 mt-3">
+                  <button
                 class="btn btn-primary mt-2"
                 (click)="agregarProductoSeleccionado()"
               >
                 Agregar Producto
               </button>
+                </div>
+              </div>
               <!-- <button
                 class="btn btn-secondary mt-2"
                 (click)="guardarCambiosProducto()"
               >
                 Guardar Cambios
               </button> -->
-            </form>
           </div>
         </div>
       </div>
       <div class="row" *ngIf="productosSeleccionados.length > 0">
         <div class="col-md-12">
-          <h3>Productos Seleccionados</h3>
+          <h6>Productos Seleccionados</h6>
           <!-- Tabla de productos seleccionados -->
           <table class="table">
             <thead>
@@ -103,7 +105,7 @@
                 <td>{{ producto.nombre }}</td>
                 <td>{{ producto.precioCompra |number}}</td>
                 <td>{{ producto.precioVenta |number }}</td>
-                <td>{{ producto.cantidadStock }}</td>
+                <td>{{ producto.cantidadIngresada }}</td>
                 <td>
                   <!-- <button
                     class="btn btn-warning btn-sm mx-1"
@@ -125,12 +127,11 @@
       </div>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-md-12">
+  <div class="row">
       <!-- Botón para agregar movimiento de inventario -->
       <div *ngIf="productosSeleccionados.length > 0">
-        <h3>Agregar Movimiento de Inventario</h3>
-        <div class="form-group">
+        <div class="row">
+        <div class="form-group col-3">
           <label for="facturaNumero">Número de Factura:</label>
           <input
             type="text"
@@ -139,10 +140,26 @@
             formControlName="facturaNumero"
           />
         </div>
-        <button class="btn btn-success mt-2" (click)="agregarMovimientoInventario()">
-          Agregar Movimiento
-        </button>
+        <div class="form-group col-3">
+          <label for="medioPago">Medio de Pago:</label>
+          <select class="form-control" id="medioPago" formControlName="medioPago">
+            <option *ngFor="let medioPago of mediosPago" [value]="medioPago">{{ medioPago }}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-3">
+          <label for="proveedor">Proveedor:</label>
+          <select class="form-control" id="proveedor" formControlName="proveedor">
+            <option *ngFor="let proveedor of proveedores" [value]="proveedor">{{ proveedor }}</option>
+          </select>
+        </div>
+        <div class="form-group col-3 mt-4">
+          <button class="btn btn-primary btn-sm" (click)="agregarMovimientoInventario()">
+            Agregar Movimiento
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+</form>
