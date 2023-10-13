@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -7,11 +8,16 @@ export class DateService {
   constructor() {}
 
   // Convierte una fecha a un objeto Timestamp de Firebase
-  fechaATimestamp(fecha: Date): any {
-    return {
-      seconds: Math.floor(fecha.getTime() / 1000), // Convierte milisegundos a segundos
-      nanoseconds: (fecha.getTime() % 1000) * 1000000 // Obtiene los milisegundos restantes y conviértelos a nanosegundos
-    };
+  fechaATimestamp(fecha: any): any {
+    if (fecha instanceof Date) {
+      return {
+        seconds: Math.floor(fecha.getTime() / 1000),
+        nanoseconds: (fecha.getTime() % 1000) * 1000000
+      };
+    } else {
+      console.error('Error: La variable proporcionada no es un objeto Date válido.');
+      return null; // o lanza una excepción, según tus necesidades
+    }
   }
 
   // Convierte un objeto Timestamp de Firebase a una fecha

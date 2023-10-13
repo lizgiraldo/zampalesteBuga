@@ -25,6 +25,9 @@ import { ProductoComponent } from './components/producto/producto.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FacturarComponent } from './components/facturar/facturar.component';
 
+
+import { TimestampToDatePipe } from 'src/app/shared/pipes/timestamp.pipe';
+
 //modulos de ngx
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -32,6 +35,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import {CollapseModule}from 'ngx-bootstrap/collapse';
 import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
 import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
+import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
 
 
 @NgModule({
@@ -47,7 +51,9 @@ import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimi
     FacturarComponent,
     NavbarComponent,
     IngresarFacturasComponent,
-    VerMovimientosComponent
+    VerMovimientosComponent,
+    TimestampToDatePipe,
+    CuadreCajaComponent
   ],
   imports: [
     BrowserModule,

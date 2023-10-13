@@ -1,7 +1,8 @@
+import { Producto } from './../models/producto.model';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { MovimientoInventario } from '../models/movimiento.model';
-import { Observable, map } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap } from 'rxjs';
 
 
 
@@ -44,6 +45,32 @@ export class MovimientoService {
     ).valueChanges();
   }
 
+
+  getMovimientosConNombresEnRangoDeFechas(fechaInicio: Date, fechaFin: Date): Observable<MovimientoInventario[]> {
+    return this.firestore.collection('movimientos', ref =>
+      ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin)
+    ).snapshotChanges().pipe(
+      switchMap(movimientos => {
+        const movimientosConProductos = movimientos.map(movimiento => {
+          const data = movimiento.payload.doc.data() as any;
+          const productoRef = data.productoID;
+          const producto$ = this.firestore.doc(`productos/${productoRef}`).valueChanges();
+          return combineLatest([producto$, of(data)]);
+        });
+        return combineLatest(movimientosConProductos);
+      }),
+      map(result => {
+        return result.map(([producto, movimiento]) => {
+          return {
+            ...movimiento, // Devuelve todos los campos del documento de movimiento
+            ProductoNombre: (producto as any)?.nombre || 'Nombre Desconocido',
+          } as unknown as MovimientoInventario; // Realizar el casting a MovimientoInventario
+        });
+      })
+    );
+  }
+
+
   // Método para actualizar un movimiento de inventario
   actualizarMovimiento(id: string, movimiento: MovimientoInventario) {
     return this.firestore.collection('movimientos').doc(id).update(movimiento);
@@ -52,5 +79,11 @@ export class MovimientoService {
   // Método para eliminar un movimiento de inventario
   eliminarMovimiento(id: string) {
     return this.firestore.collection('movimientos').doc(id).delete();
+  }
+
+  obtenerVentasEnRangoDeFechas(fechaInicio: Date, fechaFin: Date): Observable<MovimientoInventario[]> {
+    return this.firestore.collection<MovimientoInventario>('movimientos', ref =>
+      ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin).where('tipoMovimiento', '==', 'venta')
+    ).valueChanges();
   }
 }

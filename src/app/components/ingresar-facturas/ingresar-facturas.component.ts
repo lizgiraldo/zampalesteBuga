@@ -26,8 +26,9 @@ export class IngresarFacturasComponent implements OnInit {
   productos$!: Observable<Producto[]>;
   totalPrecioCompra = 0;
 
-  mediosPago: string[] = ['Efectivo', 'Tarjeta de crédito', 'Transferencia bancaria', 'Cheque'];
+  mediosPago: string[] = ['Efectivo', 'Tarjeta de crédito', 'Transferencia bancaria'];
   proveedores: string[] = ['Proveedor A', 'Proveedor B', 'Proveedor C', 'Proveedor D'];
+  tiposDocumento: string[] = ['Factura','Remisión'];
 
 
   constructor(
@@ -42,7 +43,8 @@ export class IngresarFacturasComponent implements OnInit {
       cantidad: ['', Validators.required],
       facturaNumero: [''],
       medioPago: [''],  // Control para el select de medios de pago
-      proveedor: ['']   // Control para el select de proveedores
+      proveedor: [''],   // Control para el select de proveedores
+      tipoDocumento: ['']   // Control para el select de proveedores
 
     });
   }
@@ -95,14 +97,16 @@ export class IngresarFacturasComponent implements OnInit {
     this.productosSeleccionados.forEach((producto) => {
       const movimiento: MovimientoInventario = {
         fecha: new Date(),
-        tipoMovimiento: 'entrada', // Puedes ajustar el tipo de movimiento según tus necesidades
+        tipoMovimiento: 'entrada',
         cantidad: producto.cantidadStock,
         productoID: producto.id,
         // Otros campos del movimiento según necesites
         factura_numero: this.productoForm.get('facturaNumero')?.value,
         precio: producto.precioCompra,
-        proveedor:"osdo",
-        metodoPago:"efectivo"
+        proveedor: this.productoForm.get('proveedor')?.value,
+        metodoPago: this.productoForm.get('medioPago')?.value,
+        tipoDocumento: this.productoForm.get('tipoDocumento')?.value,
+        usuarioID: ''
       };
 
       // Agregar el movimiento de inventario utilizando el servicio de movimientos

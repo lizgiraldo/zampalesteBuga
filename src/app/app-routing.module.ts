@@ -9,6 +9,7 @@ import { ProductoComponent } from './components/producto/producto.component';
 import { FacturarComponent } from './components/facturar/facturar.component';
 import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
 import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
+import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
@@ -21,6 +22,7 @@ const routes: Routes = [
 {path: 'ingresarFacturas', component: IngresarFacturasComponent},
 {path: 'recuperarPassword', component: RecuperarPasswordComponent},
 {path: 'verificarCorreo', component: VerificarCorreoComponent},
+{path: 'cuadrarCaja', component: CuadreCajaComponent},
   {path: '**', redirectTo: 'login', pathMatch:'full'},
 
 

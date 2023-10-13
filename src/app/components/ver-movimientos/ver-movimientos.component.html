@@ -13,7 +13,7 @@
         <input type="date" class="form-control" id="fechaFin" [(ngModel)]="fechaFin">
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 mt-4">
       <button class="btn btn-primary btn-block" (click)="buscarMovimientos()">Buscar Movimientos</button>
     </div>
   </div>
@@ -23,9 +23,10 @@
       <thead>
         <tr>
           <th>Numero Factura</th>
+          <th>Proveedor</th>
           <th>Fecha</th>
           <th>Cantidad</th>
-          <th>Codigo Producto</th>
+          <th>Nombre Producto</th>
           <th>Tipo de Movimiento</th>
           <!-- Agrega más encabezados según las propiedades de MovimientoInventario -->
         </tr>
@@ -33,9 +34,10 @@
       <tbody>
         <tr *ngFor="let movimiento of movimientos">
           <td>{{ movimiento.factura_numero }}</td>
-          <td>{{ movimiento.fecha }}</td>
+          <td>{{ movimiento.proveedor }}</td>
+          <td>{{ movimiento.fecha  | timestampToDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
           <td>{{ movimiento.cantidad }}</td>
-          <td>{{ movimiento.codigo }}</td>
+          <td>{{ movimiento.ProductoNombre }}</td>
           <td>{{ movimiento.tipoMovimiento }}</td>
           <!-- Agrega más celdas según las propiedades de MovimientoInventario -->
         </tr>

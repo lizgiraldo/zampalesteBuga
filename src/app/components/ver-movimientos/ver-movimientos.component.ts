@@ -1,3 +1,4 @@
+import { DateService } from './../../shared/services/date.service';
 import { Component, OnInit } from '@angular/core';
 import { MovimientoService } from 'src/app/services/movimiento.service';
 
@@ -16,7 +17,9 @@ export class VerMovimientosComponent implements OnInit {
   fechaFin!: Date;
 
   constructor(
-    private movimientoService: MovimientoService,) { }
+    private movimientoService: MovimientoService,
+    private _dateService:DateService) {
+    }
 
   ngOnInit(): void {
       //prueba github
@@ -24,16 +27,20 @@ export class VerMovimientosComponent implements OnInit {
 
 
     buscarMovimientos() {
-      // if (this.fechaInicio && this.fechaFin) {
-        if(true){
-        this.movimientoService.obtenerMovimientos().subscribe(movimientos => {
+          // let fechaInicio=this._dateService.fechaATimestamp(new Date(this.fechaInicio));
+          // let fechaFin=this._dateService.fechaATimestamp(new Date(this.fechaFin));
+
+          const fechaInicio = new Date(this.fechaInicio); // Fecha de inicio
+          const fechaFin = new Date(this.fechaFin);   // Fecha de fin
+
+        this.movimientoService.getMovimientosConNombresEnRangoDeFechas(fechaInicio,fechaFin).subscribe(movimientos => {
           this.totalItems = movimientos.length;
           this.movimientos = movimientos.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
         });
-      } else {
-        console.error('Por favor, seleccione fechas de inicio y fin.');
-      }
     }
+
+
+
 
     onPageChange(event: any): void {
       this.currentPage = event.page;
