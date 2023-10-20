@@ -13,10 +13,10 @@ export class LoginComponent implements OnInit {
   loginUsuario: FormGroup;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private afAuth: AngularFireAuth,
     private router: Router
-  ) { 
+  ) {
     this.loginUsuario = this.fb.group({
       email:['', Validators.required],
       password:['', Validators.required],
@@ -36,7 +36,4 @@ export class LoginComponent implements OnInit {
       console.log(error)
     })
   }
-
-
-
 }

@@ -64,7 +64,7 @@ export class FacturarComponent implements OnInit {
       }
     );
     this._usuarioService.getUsuarios().subscribe(usuarios => {
-      this.vendedores = usuarios.filter(usuario => usuario.estado === 'activo');
+      this.vendedores = usuarios.filter(usuario => usuario.estado === 'activo' && usuario.rol==='vendedor');
     });
   }
 
