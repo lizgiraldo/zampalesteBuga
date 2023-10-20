@@ -8,14 +8,11 @@
   <div class="row ensayo mt-2">
     <div class="card col-5">
       <h5>Vendedor</h5>
-      <select
-      [formControl]="vendedor"
-        class="form-select col-3 form-select-lg my-3"
-        aria-label=".form-select-lg example"
-      >
-        <option selected><h2>oscar</h2></option>
-        <option value="Lizeth"><h2>Lizeth</h2></option>
-      </select>
+      <div class="form-group">
+        <select class="form-select col-3 form-select-lg my-3" id="vendedor" [formControl]="vendedor">
+          <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{ vendedor.nombre }}</option>
+        </select>
+      </div>
 
       <h5 *ngIf="productosSeleccionados.length >0">Productos agregados</h5>
       <div class="tabla-contenedor">

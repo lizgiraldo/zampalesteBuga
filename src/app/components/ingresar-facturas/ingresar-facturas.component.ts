@@ -1,3 +1,4 @@
+import { ProveedorService } from './../../services/proveedor.service';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -11,6 +12,7 @@ import { ProductoSeleccionado } from './../../models/productoSelecionado.model';
 import { ProductoService } from 'src/app/services/producto.service'; // Importa tu servicio de productos
 import { MovimientoService } from './../../services/movimiento.service';
 import { Observable, map, startWith } from 'rxjs';
+import { Proveedor } from 'src/app/models/proveedor.model';
 
 @Component({
   selector: 'app-ingresar-facturas',
@@ -27,14 +29,15 @@ export class IngresarFacturasComponent implements OnInit {
   totalPrecioCompra = 0;
 
   mediosPago: string[] = ['Efectivo', 'Tarjeta de crédito', 'Transferencia bancaria'];
-  proveedores: string[] = ['Proveedor A', 'Proveedor B', 'Proveedor C', 'Proveedor D'];
+  proveedores!: Proveedor[];
   tiposDocumento: string[] = ['Factura','Remisión'];
 
 
   constructor(
     private formBuilder: FormBuilder,
     private movimientoService: MovimientoService,
-    private productoService: ProductoService
+    private productoService: ProductoService,
+    private _proveedorService:ProveedorService
   ) {
     this.productoSeleccionado = {} as Producto;
     this.productoForm = this.formBuilder.group({
@@ -52,12 +55,16 @@ export class IngresarFacturasComponent implements OnInit {
   ngOnInit() {
     // Llama al servicio para obtener los productos disponibles al inicializar el componente
     this.productoService.getProductos().subscribe((productos) => {
-      this.productosDisponibles = productos;
+      this.productosDisponibles = productos.filter(producto=>producto.precioVenta>0);
       this.productos$ = this.filter.valueChanges.pipe(
         startWith(''),
         map((text) => this.search(text))
       );
     });
+    this._proveedorService.getProveedores().subscribe(proveedores => {
+      this.proveedores = proveedores.filter(proveedor => proveedor.estado === 'activo');
+    });
+
   }
 
   agregarProductoSeleccionado() {

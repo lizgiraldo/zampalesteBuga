@@ -37,6 +37,7 @@ import {CollapseModule}from 'ngx-bootstrap/collapse';
 import { IngresarFacturasComponent } from './components/ingresar-facturas/ingresar-facturas.component';
 import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
 import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
+import { UsuarioComponent } from './components/usuario/usuario.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.compon
     VerMovimientosComponent,
     TimestampToDatePipe,
     CuadreCajaComponent,
-    ProveedorComponent
+    ProveedorComponent,
+    UsuarioComponent
   ],
   imports: [
     BrowserModule,

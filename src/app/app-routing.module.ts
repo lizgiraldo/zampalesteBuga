@@ -11,6 +11,7 @@ import { IngresarFacturasComponent } from './components/ingresar-facturas/ingres
 import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
 import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
 import { ProveedorComponent } from './components/proveedor/proveedor.component';
+import { UsuarioComponent } from './components/usuario/usuario.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
@@ -25,6 +26,7 @@ const routes: Routes = [
 {path: 'verificarCorreo', component: VerificarCorreoComponent},
 {path: 'cuadrarCaja', component: CuadreCajaComponent},
 {path: 'proveedores', component: ProveedorComponent},
+{path: 'usuarios', component: UsuarioComponent},
   {path: '**', redirectTo: 'login', pathMatch:'full'},
 
 

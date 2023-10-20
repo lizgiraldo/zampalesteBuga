@@ -157,7 +157,7 @@
         <div class="form-group col-3">
           <label for="proveedor">Proveedor:</label>
           <select class="form-control" id="proveedor" formControlName="proveedor">
-            <option *ngFor="let proveedor of proveedores" [value]="proveedor">{{ proveedor }}</option>
+            <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
           </select>
         </div>
         <div class="form-group col-3 mt-4">

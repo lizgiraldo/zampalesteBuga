@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <div class="container-fluid mx-3 mt-5">
-  <h2>Lista de Proveedores</h2>
+  <h2>Lista de Usuarios</h2>
 
   <form class="row mx-2">
     <div class="form-group form-inline col-12 col-md-8">
@@ -14,7 +14,7 @@
         (click)="openModal(contenido)"
         class="form-control mt-4 btn btn-primary"
       >
-        Nuevo Proveedor
+        Nuevo Usuario
       </button>
     </div>
     <div class="form-group form-inline col-6 col-md-2 pb-3">
@@ -24,7 +24,7 @@
         (click)="descargarCSV()"
         class="form-control mt-4 btn btn-primary"
       >
-        Exportar Excel
+        Exportar CSV
       </button>
     </div>
   </form>
@@ -38,24 +38,26 @@
           <th scope="col">Dirección</th>
           <th scope="col">Teléfono</th>
           <th scope="col">Correo</th>
+          <th scope="col">Rol</th>
           <th scope="col">Estado</th>
           <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let proveedor of proveedores$ | async; let i = index">
+        <tr *ngFor="let usuario of usuarios$ | async; let i = index">
           <th scope="row">{{ i + 1 }}</th>
-          <td>{{ proveedor.nombre }}</td>
-          <td>{{ proveedor.identificacion }}</td>
-          <td>{{ proveedor.direccion }}</td>
-          <td>{{ proveedor.telefono }}</td>
-          <td>{{ proveedor.correo }}</td>
-          <td>{{ proveedor.estado|uppercase }}</td>
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.identificacion }}</td>
+          <td>{{ usuario.direccion }}</td>
+          <td>{{ usuario.telefono }}</td>
+          <td>{{ usuario.correo }}</td>
+          <td>{{ usuario.rol }}</td>
+          <td>{{ usuario.estado | uppercase }}</td>
           <td>
-            <button class="btn btn-primary btn-sm" (click)="editarProveedor(proveedor, contenido)">
+            <button class="btn btn-primary btn-sm" (click)="editarUsuario(usuario, contenido)">
               Editar
             </button>
-            <button class="btn btn-danger btn-sm">
+            <button class="btn btn-danger btn-sm" >
               Eliminar
             </button>
           </td>
@@ -65,11 +67,11 @@
   </div>
 
   <ng-template #contenido let-modal>
-    <form [formGroup]="proveedorForm" (submit)="guardarProveedor()">
+    <form [formGroup]="usuarioForm" (submit)="guardarUsuario()">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 *ngIf="!editState" class="modal-title">Nuevo Proveedor</h4>
-          <h4 *ngIf="editState" class="modal-title">Editar Proveedor</h4>
+          <h4 *ngIf="!editState" class="modal-title">Nuevo Usuario</h4>
+          <h4 *ngIf="editState" class="modal-title">Editar Usuario</h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
@@ -92,7 +94,11 @@
             <label for="correo">Correo:</label>
             <input type="email" class="form-control" id="correo" formControlName="correo" required />
           </div>
-          Estado Producto:&ensp;
+          <div class="form-group">
+            <label for="rol">Rol:</label>
+            <input type="text" class="form-control" id="rol" formControlName="rol" required />
+          </div>
+          Estado Usuario:&ensp;
           <div class="form-check form-check-inline mt-2">
             <input class="form-check-input" type="radio" id="estadoActivo" value="activo" formControlName="estado" checked>
             <label class="form-check-label" for="estadoActivo">
@@ -107,7 +113,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" [disabled]="!proveedorForm.valid" class="btn btn-primary">Guardar</button>
+          <button type="submit" [disabled]="!usuarioForm.valid" class="btn btn-primary">Guardar</button>
           <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Cerrar</button>
         </div>
       </div>

@@ -6,36 +6,57 @@ import { Observable, catchError, from, map, of, startWith, switchMap } from 'rxj
 @Injectable({
   providedIn: 'root'
 })
-export class ProductoService {
+export class UsuarioService {
   private usuariosCollection: AngularFirestoreCollection<Usuario>;
 
   constructor(private afAuth: AngularFireAuth, private firestore: AngularFirestore) {
     this.usuariosCollection = firestore.collection<Usuario>('usuarios');
   }
 
-  // Crear un nuevo usuario por el usuario autenticado
-  crearUsuario(usuario: Usuario, contraseña: string): Observable<void> {
+  crearUsuario(usuario: Usuario): Observable<void> {
+    usuario.password='Osdo123456';
     return this.afAuth.authState.pipe(
       switchMap((user) => {
         if (user) {
-          return from(this.afAuth.createUserWithEmailAndPassword(usuario.correo, contraseña));
+          return from(this.afAuth.createUserWithEmailAndPassword(usuario.correo, usuario.password)).pipe(
+            switchMap((userCredential: any) => {
+              const newUser: Usuario = {
+                id: userCredential.user?.uid,
+                nombre: usuario.nombre,
+                correo: usuario.correo,
+                identificacion: usuario.identificacion,
+                direccion: usuario.direccion,
+                telefono: usuario.telefono,
+                password:usuario.password,
+                rol: usuario.rol,
+                estado: usuario.estado
+                // Agrega más campos según sea necesario
+              };
+              return this.usuariosCollection.doc(userCredential.user?.uid).set(newUser);
+            })
+          );
         } else {
           return new Observable<void>((observer) => {
             observer.error('No hay usuario autenticado.');
           });
         }
-      }),
-      switchMap((userCredential:any) => {
-        const newUser: Usuario = {
-          id: userCredential.user?.uid,
-          nombre: usuario.nombre,
-          correo: usuario.correo,
-          // Agrega más campos de usuario según tus necesidades
-        };
-        return this.usuariosCollection.doc(userCredential.user?.uid).set(newUser);
       })
     );
   }
+
+   // Método para obtener usuarios
+   getUsuarios(): Observable<Usuario[]> {
+    return this.usuariosCollection.snapshotChanges().pipe(
+      map((actions: DocumentChangeAction<Usuario>[]) => {
+        return actions.map((action) => {
+          const data = action.payload.doc.data();
+          const id = action.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
 
   // Obtener información de un usuario por su ID
   getUsuario(id: string): Observable<Usuario | undefined> {

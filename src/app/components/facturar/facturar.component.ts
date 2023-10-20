@@ -1,3 +1,4 @@
+import { Usuario } from './../../models/usuario.model';
 import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
@@ -12,6 +13,7 @@ import { MovimientoInventario } from 'src/app/models/movimiento.model';
 import { Producto } from 'src/app/models/producto.model';
 import { MovimientoService } from 'src/app/services/movimiento.service';
 import { ProductoService } from 'src/app/services/producto.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-facturar',
@@ -20,7 +22,6 @@ import { ProductoService } from 'src/app/services/producto.service';
 })
 export class FacturarComponent implements OnInit {
   productosSeleccionados: any[] = [];
-
   productos$!: Observable<Producto[]>;
   selectedProducto: any;
   time: string = '';
@@ -38,10 +39,12 @@ export class FacturarComponent implements OnInit {
   codigoProducto: string = '';
   cantidadProductoSelecionado: number = 1;
   modalRef!: BsModalRef;
+  vendedores: Usuario[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private productoService: ProductoService,
+    private _usuarioService: UsuarioService,
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
     private movimientoService: MovimientoService,
@@ -49,8 +52,8 @@ export class FacturarComponent implements OnInit {
     this.selectedProducto = '';
 
     this.productoService.getProductos().subscribe(
-      (obj: any) => {
-        this.productos = obj;
+      (productos) => {
+        this.productos = productos.filter(producto=>producto.precioVenta>0);
         this.productos$ = this.filter.valueChanges.pipe(
           startWith(''),
           map((text) => this.search(text))
@@ -60,6 +63,9 @@ export class FacturarComponent implements OnInit {
         console.log(errorData);
       }
     );
+    this._usuarioService.getUsuarios().subscribe(usuarios => {
+      this.vendedores = usuarios.filter(usuario => usuario.estado === 'activo');
+    });
   }
 
   ngOnInit(): void {
