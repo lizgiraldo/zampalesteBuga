@@ -1,9 +1,11 @@
-// Usuario.ts
-export interface Usuario {
+// Proveedor.ts
+export interface Proveedor {
   id?: string; // ID del usuario (generado automáticamente por Firebase Authentication)
-  nombre: string;
+  identificacion:string;
+  nombre:string;
+  direccion:string;
+  telefono:string;
   correo: string;
-  rol:string;
   estado:string;
   // Agrega más campos de usuario según tus necesidades
 }

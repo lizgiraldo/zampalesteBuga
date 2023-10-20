@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, startWith, map } from 'rxjs';
-import { Producto } from 'src/app/models/producto.model'; // Importa el modelo Producto
+import { Producto } from './../../models/producto.model'; // Importa el modelo Producto
 import { ProductoService } from 'src/app/services/producto.service';
 import Swal from 'sweetalert2';
 import * as Papa from 'papaparse';
@@ -41,7 +41,7 @@ export class ProductoComponent implements OnInit {
       insumos: [false],
       codigoInsumo: [''],
       cantidadInsumo: [0],
-      estado: [true]
+      estado: ['activo',Validators.required]
     });
 
     this.selectedProducto = '';
@@ -81,7 +81,6 @@ export class ProductoComponent implements OnInit {
   guardarProducto(): void {
     if (this.productoForm.valid) {
       const productoData = this.productoForm.value as Producto;
-
       if (this.editingProducto) {
         // Editar un producto existente
         this.productoService.updateProducto(
@@ -99,6 +98,8 @@ export class ProductoComponent implements OnInit {
         this.productoService.addProducto(productoData).then(() => {
           console.log('Producto agregado con éxito');
           this.productoForm.reset();
+          this.mostrarMensaje();
+          this.modalRef.hide();
         });
       }
     }
@@ -114,6 +115,18 @@ export class ProductoComponent implements OnInit {
   eliminarProducto(id: string): void {
     this.productoService.deleteProducto(id).then(() => {
       console.log('Producto eliminado con éxito');
+    });
+  }
+
+  modificarEstadoProducto(id: string): void {
+    this.productoService.getProducto(id).subscribe((producto: any) => {
+      // Modificar solo el campo 'estado' del producto
+      producto.estado = 'inactivo';
+
+      // Llamar al método de tu servicio para actualizar el producto en la base de datos
+      this.productoService.updateProducto(id, producto).then(() => {
+        console.log('Estado del producto cambiado a inactivo con éxito');
+      });
     });
   }
 

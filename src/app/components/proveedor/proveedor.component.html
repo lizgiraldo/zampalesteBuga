@@ -1,0 +1,107 @@
+<app-navbar></app-navbar>
+
+<div class="container-fluid mx-3 mt-5">
+  <h2>Lista de Proveedores</h2>
+
+  <form class="row mx-2">
+    <div class="form-group form-inline col-12 col-md-8">
+      Buscar: <input class="form-control" type="text" [formControl]="filter" />
+    </div>
+    <div class="form-group form-inline col-6 col-md-2 pb-3">
+      <button
+        type="button"
+        ngbAutofocus
+        (click)="openModal(contenido)"
+        class="form-control mt-4 btn btn-primary"
+      >
+        Nuevo Proveedor
+      </button>
+    </div>
+    <div class="form-group form-inline col-6 col-md-2 pb-3">
+      <button
+        type="button"
+        ngbAutofocus
+        (click)="descargarCSV()"
+        class="form-control mt-4 btn btn-primary"
+      >
+        Exportar Excel
+      </button>
+    </div>
+  </form>
+  <div style="height: 70%; overflow: scroll">
+    <table class="table table-striped" aria-label="">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Identificación</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let proveedor of proveedores$ | async; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ proveedor.nombre }}</td>
+          <td>{{ proveedor.identificacion }}</td>
+          <td>{{ proveedor.direccion }}</td>
+          <td>{{ proveedor.telefono }}</td>
+          <td>{{ proveedor.correo }}</td>
+          <td>{{ proveedor.estado }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" (click)="editarProveedor(proveedor, contenido)">
+              Editar
+            </button>
+            <button class="btn btn-danger btn-sm">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #contenido let-modal>
+    <form [formGroup]="proveedorForm" (submit)="guardarProveedor()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="!editState" class="modal-title">Nuevo Proveedor</h4>
+          <h4 *ngIf="editState" class="modal-title">Editar Proveedor</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="identificacion">Identificación:</label>
+            <input type="text" class="form-control" id="identificacion" formControlName="identificacion" required />
+          </div>
+          <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" class="form-control" id="direccion" formControlName="direccion" required />
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" formControlName="telefono" required />
+          </div>
+          <div class="form-group">
+            <label for="correo">Correo:</label>
+            <input type="email" class="form-control" id="correo" formControlName="correo" required />
+          </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="estado" formControlName="estado" />
+            <label class="form-check-label" for="estado">Activo</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" [disabled]="!proveedorForm.valid" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Cerrar</button>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+</div>

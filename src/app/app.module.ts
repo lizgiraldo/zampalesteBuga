@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment';
 import { ProductoComponent } from './components/producto/producto.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FacturarComponent } from './components/facturar/facturar.component';
+import { ProveedorComponent } from './components/proveedor/proveedor.component';
 
 
 import { TimestampToDatePipe } from 'src/app/shared/pipes/timestamp.pipe';
@@ -53,7 +54,8 @@ import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.compon
     IngresarFacturasComponent,
     VerMovimientosComponent,
     TimestampToDatePipe,
-    CuadreCajaComponent
+    CuadreCajaComponent,
+    ProveedorComponent
   ],
   imports: [
     BrowserModule,

@@ -12,7 +12,7 @@ export interface Producto {
   insumos:boolean;
   codigoInsumo?:string;
   cantidadInsumo?:number;
-  estado:boolean;
+  estado:string;
 }
 
 
