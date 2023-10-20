@@ -43,11 +43,11 @@ export class ProductoService {
     });
   }
 
-  updateProducto(id: string, producto: Producto): Promise<void> {
-    return this.productosCollection.doc(id).update(producto).then(() => {
-      console.log('Producto actualizado con éxito');
-    });
-  }
+    updateProducto(id: string, producto: Producto): Promise<void> {
+      return this.productosCollection.doc(id).update(producto).then(() => {
+        console.log('Producto actualizado con éxito');
+      });
+    }
 
   deleteProducto(id: string): Promise<void> {
     return this.productosCollection.doc(id).delete().then(() => {

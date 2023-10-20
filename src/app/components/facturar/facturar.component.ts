@@ -8,7 +8,9 @@ import {
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, startWith, map } from 'rxjs';
+import { MovimientoInventario } from 'src/app/models/movimiento.model';
 import { Producto } from 'src/app/models/producto.model';
+import { MovimientoService } from 'src/app/services/movimiento.service';
 import { ProductoService } from 'src/app/services/producto.service';
 
 @Component({
@@ -26,6 +28,9 @@ export class FacturarComponent implements OnInit {
   tableData: any[] = [];
   showError: boolean = false;
   filter = new FormControl('');
+  tipoDocumento = new FormControl('');
+  metodoPago = new FormControl('');
+  vendedor = new FormControl('');
   productos: Producto[] = [];
   editingProducto: Producto | null = null;
   editState: boolean = false;
@@ -38,7 +43,8 @@ export class FacturarComponent implements OnInit {
     private formBuilder: FormBuilder,
     private productoService: ProductoService,
     private modalService: BsModalService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private movimientoService: MovimientoService,
   ) {
     this.selectedProducto = '';
 
@@ -137,8 +143,45 @@ export class FacturarComponent implements OnInit {
 
   }
 
-  pasoPago(){
+  pasoPago() {
+    // Para cada producto seleccionado, crea un nuevo objeto MovimientoInventario y agrégalo a la lista de movimientos
+    this.productosSeleccionados.forEach((producto) => {
+      const movimiento: MovimientoInventario = {
+        fecha: new Date(),
+        tipoDocumento: this.tipoDocumento.value+"", // O el tipo de documento que aplique
+        tipoMovimiento: 'Venta', // O el tipo de movimiento que aplique
+        cantidad: producto.cantidad,
+        productoID: producto.id,
+        usuarioID: 'ID_del_usuario', // Asigna el ID del usuario que realiza la operación
+        comentario: 'Venta de producto', // Otra información relevante sobre el movimiento
+        factura_numero: 'Número_de_factura', // Número de factura asociado al movimiento
+        precio: producto.precioVenta, // Precio del producto
+        proveedor: this.vendedor.value+"", // Nombre del proveedor si aplica
+        metodoPago: this.metodoPago.value+"", // Método de pago utilizado
+      };
 
+      // Agregar el movimiento de inventario utilizando el servicio de movimientos
+      this.movimientoService.agregarMovimiento(movimiento);
+        producto.cantidadStock-=producto.cantidad;
+      //Actualizar el producto en el servicio de productos (Firebase)
+      this.productoService
+        .updateProducto(producto.id as string, producto)
+        .then(() => {
+          // Producto actualizado con éxito
+          console.log('Se actualizó el producto');
+        })
+        .catch((error) => {
+          // Manejar errores en la promesa
+          console.error('Error al actualizar el producto:', error);
+        });
+    });
+
+    // Luego, puedes hacer lo que necesites con la lista de movimientos,
+    // como enviarla a un servicio para guardarla en tu base de datos, por ejemplo.
+
+    // Finalmente, limpia la lista de productos seleccionados para un nuevo pedido
+    this.productosSeleccionados = [];
+    this.totalGeneral = 0;
   }
 
   openModal(contenido:any){

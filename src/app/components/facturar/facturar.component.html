@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <div class="container">
-  <select class="form-select form-select-lg my-3" aria-label=".form-select-lg">
+  <select class="form-select form-select-lg my-3" [formControl]="tipoDocumento" aria-label=".form-select-lg">
     <option selected><h2>Facturación</h2></option>
     <option value="1"><h2>Remisión</h2></option>
   </select>
@@ -9,11 +9,12 @@
     <div class="card col-5">
       <h5>Vendedor</h5>
       <select
+      [formControl]="vendedor"
         class="form-select col-3 form-select-lg my-3"
         aria-label=".form-select-lg example"
       >
         <option selected><h2>oscar</h2></option>
-        <option value="1"><h2>Lizeth</h2></option>
+        <option value="Lizeth"><h2>Lizeth</h2></option>
       </select>
 
       <h5 *ngIf="productosSeleccionados.length >0">Productos agregados</h5>
@@ -134,20 +135,21 @@
     </div>
     <div class="modal-body">
       <select
+      [formControl]="metodoPago"
         class="form-select col-3 form-select-lg my-3"
         aria-label=".form-select-lg example"
       >
         <option selected><h2>Efectivo</h2></option>
-        <option value="1"><h2>Nequi</h2></option>
-        <option value="2"><h2>QR</h2></option>
-        <option value="3"><h2>Tarjeta</h2></option>
+        <option value="Nequi"><h2>Nequi</h2></option>
+        <option value="QR"><h2>QR</h2></option>
+        <option value="Tarjeta"><h2>Tarjeta</h2></option>
       </select>
 
       <h2>Total a Pagar ${{ totalGeneral | number }}</h2>
       <button type="button" class="btn btn-primary" popover="Vivamus sagittis">
         LIstos Para pagar?
       </button>
-      <button type="button" class="btn btn-primary" tooltip="Vivamus sagittis">
+      <button type="button" (click)="pasoPago();modalRef.hide()" class="btn btn-primary" tooltip="Vivamus sagittis">
         Pagar
       </button>
     </div>

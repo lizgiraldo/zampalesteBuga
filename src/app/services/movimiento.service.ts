@@ -83,7 +83,7 @@ export class MovimientoService {
 
   obtenerVentasEnRangoDeFechas(fechaInicio: Date, fechaFin: Date): Observable<MovimientoInventario[]> {
     return this.firestore.collection<MovimientoInventario>('movimientos', ref =>
-      ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin).where('tipoMovimiento', '==', 'venta')
+      ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin).where('tipoMovimiento', '==', 'Venta')
     ).valueChanges();
   }
 }

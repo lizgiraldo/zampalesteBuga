@@ -97,7 +97,7 @@ export class IngresarFacturasComponent implements OnInit {
     this.productosSeleccionados.forEach((producto) => {
       const movimiento: MovimientoInventario = {
         fecha: new Date(),
-        tipoMovimiento: 'entrada',
+        tipoMovimiento: 'Entrada',
         cantidad: producto.cantidadStock,
         productoID: producto.id,
         // Otros campos del movimiento según necesites
