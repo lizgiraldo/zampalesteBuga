@@ -1,11 +1,11 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: "AIzaSyClkTrF8WXrQ2v9VeqnptWMhrMB3zIY2Ao",
-    authDomain: "loginzampaleste.firebaseapp.com",
-    projectId: "loginzampaleste",
-    storageBucket: "loginzampaleste.appspot.com",
-    messagingSenderId: "395886790146",
-    appId: "1:395886790146:web:e5fb04f92f879db772491b"
+    apiKey: "AIzaSyBYNJ2ez5R04KV78AlqXV33EDTIOznhfSY",
+  authDomain: "zampaleste-98a90.firebaseapp.com",
+  projectId: "zampaleste-98a90",
+  storageBucket: "zampaleste-98a90.appspot.com",
+  messagingSenderId: "333874395357",
+  appId: "1:333874395357:web:4f2b99f0fd4bfee0f3c334"
   }
 };
