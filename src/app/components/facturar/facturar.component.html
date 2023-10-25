@@ -1,16 +1,16 @@
 <app-navbar></app-navbar>
 
-<div class="container">
-  <select class="form-select form-select-lg my-3" [formControl]="tipoDocumento" aria-label=".form-select-lg">
-    <option selected><h2>Facturación</h2></option>
-    <option value="1"><h2>Remisión</h2></option>
+<form [formGroup]="formPago"  class="container">
+  <select class="form-select form-select-lg my-3" formControlName="tipoDocumento" aria-label=".form-select-lg">
+    <option value="Factura" selected>Facturación</option>
+    <option value="Remision">Remisión</option>
   </select>
   <div class="row ensayo mt-2">
     <div class="card col-5">
       <h5>Vendedor</h5>
       <div class="form-group">
-        <select class="form-select col-3 form-select-lg my-3" id="vendedor" [formControl]="vendedor">
-          <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{ vendedor.nombre }}</option>
+        <select class="form-select col-3 form-select-lg my-3" id="vendedor" formControlName="vendedor">
+          <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor">{{ vendedor.nombre }}</option>
         </select>
       </div>
 
@@ -63,7 +63,7 @@
         <div class="col-6">
           <div
             class="card border-left-success shadow h-100 py-2"
-            (click)="openModal(template)"
+            *ngIf="totalGeneral !== 0" (click)="openModal(template)"
           >
             <i class="text-center text-secondary f-10"
               >(click para ir a pagos)</i
@@ -131,16 +131,13 @@
       </button>
     </div>
     <div class="modal-body">
-      <select
-      [formControl]="metodoPago"
-        class="form-select col-3 form-select-lg my-3"
-        aria-label=".form-select-lg example"
-      >
-        <option selected><h2>Efectivo</h2></option>
-        <option value="Nequi"><h2>Nequi</h2></option>
-        <option value="QR"><h2>QR</h2></option>
-        <option value="Tarjeta"><h2>Tarjeta</h2></option>
+      <select formControlName="metodoPago" class="form-select col-3 form-select-lg my-3" aria-label=".form-select-lg example">
+        <option value="Efectivo" selected>Efectivo</option>
+        <option value="Nequi">Nequi</option>
+        <option value="QR">QR</option>
+        <option value="Tarjeta">Tarjeta</option>
       </select>
+
 
       <h2>Total a Pagar ${{ totalGeneral | number }}</h2>
       <button type="button" class="btn btn-primary" popover="Vivamus sagittis">
@@ -151,4 +148,4 @@
       </button>
     </div>
   </ng-template>
-</div>
+</form>

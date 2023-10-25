@@ -11,9 +11,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, startWith, map } from 'rxjs';
 import { MovimientoInventario } from 'src/app/models/movimiento.model';
 import { Producto } from 'src/app/models/producto.model';
+import { Venta } from 'src/app/models/venta.model';
 import { MovimientoService } from 'src/app/services/movimiento.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { VentaService } from 'src/app/services/venta.service';
 
 @Component({
   selector: 'app-facturar',
@@ -29,9 +31,6 @@ export class FacturarComponent implements OnInit {
   tableData: any[] = [];
   showError: boolean = false;
   filter = new FormControl('');
-  tipoDocumento = new FormControl('');
-  metodoPago = new FormControl('');
-  vendedor = new FormControl('');
   productos: Producto[] = [];
   editingProducto: Producto | null = null;
   editState: boolean = false;
@@ -40,11 +39,13 @@ export class FacturarComponent implements OnInit {
   cantidadProductoSelecionado: number = 1;
   modalRef!: BsModalRef;
   vendedores: Usuario[] = [];
+  formPago: FormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private productoService: ProductoService,
     private _usuarioService: UsuarioService,
+    private _ventasService: VentaService,
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
     private movimientoService: MovimientoService,
@@ -65,6 +66,13 @@ export class FacturarComponent implements OnInit {
     );
     this._usuarioService.getUsuarios().subscribe(usuarios => {
       this.vendedores = usuarios.filter(usuario => usuario.estado === 'activo' && usuario.rol==='vendedor');
+    });
+
+    this.formPago = this.fb.group({
+      tipoDocumento:['Factura'],
+      vendedor: [],
+      metodoPago : ['Efectivo'],
+      // Agrega más campos según tus necesidades
     });
   }
 
@@ -150,42 +158,44 @@ export class FacturarComponent implements OnInit {
   }
 
   pasoPago() {
-    // Para cada producto seleccionado, crea un nuevo objeto MovimientoInventario y agrégalo a la lista de movimientos
-    this.productosSeleccionados.forEach((producto) => {
-      const movimiento: MovimientoInventario = {
-        fecha: new Date(),
-        tipoDocumento: this.tipoDocumento.value+"", // O el tipo de documento que aplique
-        tipoMovimiento: 'Venta', // O el tipo de movimiento que aplique
-        cantidad: producto.cantidad,
-        productoID: producto.id,
-        usuarioID: 'ID_del_usuario', // Asigna el ID del usuario que realiza la operación
-        comentario: 'Venta de producto', // Otra información relevante sobre el movimiento
-        factura_numero: 'Número_de_factura', // Número de factura asociado al movimiento
-        precio: producto.precioVenta, // Precio del producto
-        proveedor: this.vendedor.value+"", // Nombre del proveedor si aplica
-        metodoPago: this.metodoPago.value+"", // Método de pago utilizado
-      };
+    // Transforma la lista de productos seleccionados en productos_vendidos
+    const form = this.formPago.value;
+    const productosVendidos = this.productosSeleccionados.map(producto => ({
+      id_producto: producto.id,
+      nombre_producto: producto.nombre,
+      cantidad: producto.cantidad,
+      precio_unitario: producto.precioVenta
+    }));
 
-      // Agregar el movimiento de inventario utilizando el servicio de movimientos
-      this.movimientoService.agregarMovimiento(movimiento);
-        producto.cantidadStock-=producto.cantidad;
-      //Actualizar el producto en el servicio de productos (Firebase)
-      this.productoService
-        .updateProducto(producto.id as string, producto)
-        .then(() => {
-          // Producto actualizado con éxito
-          console.log('Se actualizó el producto');
-        })
-        .catch((error) => {
-          // Manejar errores en la promesa
-          console.error('Error al actualizar el producto:', error);
-        });
+    // Crea la venta con los productos_vendidos
+    const venta: Venta = {
+      numeroFactura:1,
+      tipo_documento:form.tipoDocumento,
+      id_vendedor: form.vendedor.id,
+      nombre_vendedor:form.vendedor.nombre,
+      metodo_pago:form.metodoPago,
+      productos_vendidos: productosVendidos,
+      fecha_venta: new Date(),
+      monto_total: productosVendidos.reduce((total, producto) => total + (producto.cantidad * producto.precio_unitario), 0)
+    };
+
+    // Guarda la venta en ventasEnCurso para ser procesada al final del turno
+    this._ventasService.addVenta(venta).subscribe(
+      () => {
+        console.log('Venta guardada con éxito');
+      },
+      (error) => {
+        console.error('Error al guardar la venta:', error);
+      }
+    );
+    //this.ventasEnCurso.push(venta);
+
+    // Actualiza el stock de productos en this.productosSeleccionados
+    this.productosSeleccionados.forEach(producto => {
+      producto.cantidadStock -= producto.cantidad;
     });
 
-    // Luego, puedes hacer lo que necesites con la lista de movimientos,
-    // como enviarla a un servicio para guardarla en tu base de datos, por ejemplo.
-
-    // Finalmente, limpia la lista de productos seleccionados para un nuevo pedido
+    // Limpia la lista de productos seleccionados para un nuevo pedido
     this.productosSeleccionados = [];
     this.totalGeneral = 0;
   }

@@ -4,8 +4,10 @@ import { ProductoVendido } from "./productoVendido.model";
 export interface Venta {
   id?: string; // ID de la venta (generado automáticamente por Firestore)
   numeroFactura:number;
-  id_usuario: string; // ID del usuario que realizó la venta
-  Nombre:string;
+  tipo_documento:string;
+  id_vendedor: string; // ID del usuario que realizó la venta
+  nombre_vendedor:string;
+  metodo_pago:string;
   productos_vendidos: ProductoVendido[];
   fecha_venta: any; // Puedes usar `firebase.firestore.Timestamp` o `Date` según tus preferencias
   monto_total: number;

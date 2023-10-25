@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore/';
-import { Observable, map } from 'rxjs';
+import { Observable, from, map } from 'rxjs';
 import { Venta } from '../models/venta.model'; // Asegúrate de ajustar la ruta al modelo de Venta
 
 @Injectable({
@@ -52,10 +52,12 @@ export class VentaService {
     );
   }
 
-  addVenta(venta: Venta): Promise<void> {
-    return this.ventasCollection.add(venta).then(() => {
-      console.log('Venta agregada con éxito');
-    });
+  addVenta(venta: Venta): Observable<void> {
+    return from(this.ventasCollection.add(venta)).pipe(
+      map(() => {
+        console.log('Venta agregada con éxito');
+      })
+    );
   }
 
   updateVenta(id: string, venta: Venta): Promise<void> {
