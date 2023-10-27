@@ -193,7 +193,21 @@ export class FacturarComponent implements OnInit {
     // Actualiza el stock de productos en this.productosSeleccionados
     this.productosSeleccionados.forEach(producto => {
       producto.cantidadStock -= producto.cantidad;
+
+      this.productoService
+        .updateProducto(producto.id as string, producto)
+        .then(() => {
+          // Producto actualizado con éxito
+          console.log('Se actualizó el producto');
+        })
+        .catch((error) => {
+          // Manejar errores en la promesa
+          console.error('Error al actualizar el producto:', error);
+        });
     });
+
+    //Actualizar el producto en el servicio de productos (Firebase)
+
 
     // Limpia la lista de productos seleccionados para un nuevo pedido
     this.productosSeleccionados = [];
