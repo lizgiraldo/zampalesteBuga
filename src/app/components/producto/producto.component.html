@@ -55,13 +55,11 @@
           <td>{{ producto.cantidadStock }}</td>
           <td>{{ producto.stockMinimo }}</td>
           <td>
-            <button
-              class="btn btn-primary btn-sm"
-              (click)="editarProducto(producto, contenido)"
-            >
-              Editar
+            <button class="btn btn-success btn-sm"
+              (click)="editarProducto(producto, contenido)" >
+            <i class="fas fa-edit"></i>
             </button>
-            <button class="btn btn-danger btn-sm">Eliminar</button>
+
           </td>
         </tr>
       </tbody>

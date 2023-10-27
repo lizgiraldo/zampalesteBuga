@@ -54,11 +54,8 @@
           <td>{{ usuario.rol }}</td>
           <td>{{ usuario.estado | uppercase }}</td>
           <td>
-            <button class="btn btn-primary btn-sm" (click)="editarUsuario(usuario, contenido)">
-              Editar
-            </button>
-            <button class="btn btn-danger btn-sm" >
-              Eliminar
+            <button class="btn btn-success btn-sm" (click)="editarUsuario(usuario, contenido)">
+              <i class="fas fa-edit"></i>
             </button>
           </td>
         </tr>

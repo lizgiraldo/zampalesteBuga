@@ -52,11 +52,8 @@
           <td>{{ proveedor.correo }}</td>
           <td>{{ proveedor.estado|uppercase }}</td>
           <td>
-            <button class="btn btn-primary btn-sm" (click)="editarProveedor(proveedor, contenido)">
-              Editar
-            </button>
-            <button class="btn btn-danger btn-sm">
-              Eliminar
+            <button class="btn btn-success btn-sm" (click)="editarProveedor(proveedor, contenido)">
+              <i class="fas fa-edit"></i>
             </button>
           </td>
         </tr>
