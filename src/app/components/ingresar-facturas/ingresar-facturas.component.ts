@@ -55,7 +55,7 @@ export class IngresarFacturasComponent implements OnInit {
   ngOnInit() {
     // Llama al servicio para obtener los productos disponibles al inicializar el componente
     this.productoService.getProductos().subscribe((productos) => {
-      this.productosDisponibles = productos.filter(producto=>producto.precioVenta>0);
+      this.productosDisponibles = productos.filter(producto=>producto.estado==='activo');
       this.productos$ = this.filter.valueChanges.pipe(
         startWith(''),
         map((text) => this.search(text))

@@ -12,6 +12,7 @@ import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimi
 import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
 import { ProveedorComponent } from './components/proveedor/proveedor.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
+import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch:'full'},
@@ -27,6 +28,7 @@ const routes: Routes = [
 {path: 'cuadrarCaja', component: CuadreCajaComponent},
 {path: 'proveedores', component: ProveedorComponent},
 {path: 'usuarios', component: UsuarioComponent},
+{path: 'ventasTurno', component: VentasturnoComponent},
   {path: '**', redirectTo: 'login', pathMatch:'full'},
 
 

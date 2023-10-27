@@ -1,0 +1,31 @@
+<app-navbar></app-navbar>
+<div class="container mt-4">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Número de Factura</th>
+        <th scope="col">Vendedor</th>
+        <th scope="col">Método de Pago</th>
+        <th scope="col">Monto Total</th>
+        <th scope="col">Productos vendidos</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let venta of ventas">
+        <td>{{ venta?.numeroFactura }}</td>
+        <td>{{ venta?.nombre_vendedor }}</td>
+        <td>{{ venta?.metodo_pago }}</td>
+        <td>$ {{ venta?.monto_total|number }}</td>
+        <td class="list-group">
+            <ul>
+              <li class="list-group-item" *ngFor="let producto of venta.productos_vendidos">{{ producto.nombre_producto }}: {{ producto.cantidad }} </li>
+            </ul>
+        </td>
+        <td>
+          <button *ngIf="venta && venta.id" class="btn btn-danger" (click)="eliminarVenta(venta.id,venta.productos_vendidos)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

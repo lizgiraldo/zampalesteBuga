@@ -38,6 +38,7 @@ import { IngresarFacturasComponent } from './components/ingresar-facturas/ingres
 import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimientos.component';
 import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
+import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
     TimestampToDatePipe,
     CuadreCajaComponent,
     ProveedorComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    VentasturnoComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +73,7 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
+    CollapseModule.forRoot(),
     CollapseModule.forRoot(),
   ],
   providers: [],

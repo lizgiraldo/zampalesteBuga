@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore/';
 import { Observable, from, map } from 'rxjs';
 import { Venta } from '../models/venta.model'; // Asegúrate de ajustar la ruta al modelo de Venta
+import { ProductoVendido } from '../models/productoVendido.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,10 @@ export class VentaService {
     );
   }
 
+  getVentaPorId(id: string): Observable<any> {
+    return this.ventasCollection.doc(id).valueChanges();
+  }
+
   getVenta(id: string): Observable<Venta | null> {
     return this.ventasCollection.doc(id).snapshotChanges().pipe(
       map((action) => {
@@ -66,9 +71,36 @@ export class VentaService {
     });
   }
 
-  deleteVenta(id: string): Promise<void> {
+  deletesVenta(id: string): Promise<void> {
     return this.ventasCollection.doc(id).delete().then(() => {
       console.log('Venta eliminada con éxito');
     });
+  }
+
+  deleteVenta(ventaId: string, productosVendidos: ProductoVendido[]): Observable<any> {
+    return from(this.firestore.firestore.runTransaction(async transaction => {
+      // Obtener la venta y eliminarla
+      const ventaRef = this.firestore.collection('Ventas').doc(ventaId).ref;
+      const ventaDoc = await transaction.get(ventaRef);
+      if (!ventaDoc.exists) {
+        throw new Error('La venta no existe.');
+      }
+
+
+      // Actualizar el stock de los productos vendidos
+      const promises = productosVendidos.map(producto => {
+        const productoRef = this.firestore.collection('productos').doc(producto.id_producto).ref;
+        return transaction.get(productoRef).then((productoDoc:any) => {
+          if (!productoDoc.exists) {
+            throw new Error('El producto no existe.');
+          }
+          const cantidadStockActual = productoDoc.data().cantidadStock;
+          const nuevaCantidadStock = cantidadStockActual + producto.cantidad;
+          transaction.update(productoRef, { cantidadStock: nuevaCantidadStock });
+        });
+      });
+      transaction.delete(ventaRef);
+      return Promise.all(promises);
+    }));
   }
 }
