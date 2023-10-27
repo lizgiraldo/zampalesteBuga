@@ -13,6 +13,7 @@ import { ProductoService } from 'src/app/services/producto.service'; // Importa 
 import { MovimientoService } from './../../services/movimiento.service';
 import { Observable, map, startWith } from 'rxjs';
 import { Proveedor } from 'src/app/models/proveedor.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-ingresar-facturas',
@@ -24,6 +25,7 @@ export class IngresarFacturasComponent implements OnInit {
   productosDisponibles!: Producto[];
   productosSeleccionados: ProductoSeleccionado[] = [];
   productoForm: FormGroup;
+  facturaForm: FormGroup;
   filter = new FormControl('');
   productos$!: Observable<Producto[]>;
   totalPrecioCompra = 0;
@@ -44,10 +46,13 @@ export class IngresarFacturasComponent implements OnInit {
       precioCompra: ['', Validators.required],
       precioVenta: ['', Validators.required],
       cantidad: ['', Validators.required],
-      facturaNumero: [''],
-      medioPago: [''],  // Control para el select de medios de pago
-      proveedor: [''],   // Control para el select de proveedores
-      tipoDocumento: ['']   // Control para el select de proveedores
+    });
+    this.facturaForm = this.formBuilder.group({
+
+      facturaNumero: ['', Validators.required],
+      medioPago: ['', Validators.required],  // Control para el select de medios de pago
+      proveedor: ['', Validators.required],   // Control para el select de proveedores
+      tipoDocumento: ['', Validators.required]   // Control para el select de proveedores
 
     });
   }
@@ -98,6 +103,15 @@ export class IngresarFacturasComponent implements OnInit {
   agregarMovimientoInventario() {
     if (this.productosSeleccionados.length === 0) {
       // Lógica para manejar el caso donde no hay productos seleccionados
+
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'No hay productos agregados',
+          showConfirmButton: false,
+          timer: 1500
+        });
+
       return;
     }
 

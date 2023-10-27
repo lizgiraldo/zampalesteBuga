@@ -1,5 +1,4 @@
 <app-navbar></app-navbar>
-<form [formGroup]="productoForm">
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-4">
@@ -39,6 +38,7 @@
               TOTAL FACTURA: ${{totalPrecioCompra|number}}
             </div>
           </div>
+          <form [formGroup]="productoForm">
           <div class="card-body">
               <div class="row">
                 <div class="form-group col-md-3">
@@ -70,6 +70,7 @@
                 </div>
                 <div class="form-group col-md-3 mt-3">
                   <button
+                  [disabled]="!productoForm.valid"
                 class="btn btn-primary mt-2"
                 (click)="agregarProductoSeleccionado()"
               >
@@ -84,6 +85,7 @@
                 Guardar Cambios
               </button> -->
           </div>
+        </form>
         </div>
       </div>
       <div class="row" *ngIf="productosSeleccionados.length > 0">
@@ -127,6 +129,7 @@
       </div>
     </div>
   </div>
+  <form [formGroup]="facturaForm">
   <div class="row">
       <!-- Botón para agregar movimiento de inventario -->
       <!-- <div *ngIf="productosSeleccionados.length > 0"> -->
@@ -161,12 +164,12 @@
           </select>
         </div>
         <div class="form-group col-3 mt-4">
-          <button class="btn btn-primary btn-sm" (click)="agregarMovimientoInventario()">
+          <button [disabled]="!facturaForm.valid" class="btn btn-primary btn-sm" (click)="agregarMovimientoInventario()">
             Agregar Movimiento
           </button>
         </div>
       </div>
     </div>
   </div>
-</div>
 </form>
+</div>
