@@ -134,6 +134,7 @@ export class IngresarFacturasComponent implements OnInit {
 
     // Limpiar lista de productos seleccionados y formulario
     this.productosSeleccionados = [];
+    this.totalPrecioCompra = 0;
     this.productoForm.reset();
   }
 
