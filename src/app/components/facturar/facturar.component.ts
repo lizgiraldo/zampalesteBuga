@@ -41,6 +41,9 @@ export class FacturarComponent implements OnInit {
   vendedores: Usuario[] = [];
   formPago: FormGroup;
 
+  numeroFactura:any;
+  numeroRemision:any;
+
   constructor(
     private fb: FormBuilder,
     private productoService: ProductoService,
@@ -74,6 +77,8 @@ export class FacturarComponent implements OnInit {
       metodoPago : ['Efectivo'],
       // Agrega más campos según tus necesidades
     });
+    this.numeroFactura=localStorage.getItem("numeroFactura");
+    this.numeroRemision=localStorage.getItem("numeroRemision");
   }
 
   ngOnInit(): void {
@@ -84,6 +89,15 @@ export class FacturarComponent implements OnInit {
       this.spinner.hide();
     }, 1500);
     this.loadProductos();
+  }
+
+  ngAfterViewInit(): void {
+
+    this.numeroFactura=localStorage.getItem("numeroFactura");
+    this.numeroRemision=localStorage.getItem("numeroRemision");
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+
   }
 
   loadProductos(): void {
@@ -169,7 +183,7 @@ export class FacturarComponent implements OnInit {
 
     // Crea la venta con los productos_vendidos
     const venta: Venta = {
-      numeroFactura:1,
+      numeroFactura:form.tipoDocumento=='Remision'?this.numeroRemision:this.numeroFactura,
       tipo_documento:form.tipoDocumento,
       id_vendedor: form.vendedor.id,
       nombre_vendedor:form.vendedor.nombre,
@@ -183,6 +197,13 @@ export class FacturarComponent implements OnInit {
     this._ventasService.addVenta(venta).subscribe(
       () => {
         console.log('Venta guardada con éxito');
+        if(form.tipoDocumento=='Remision'){
+          this.numeroRemision++
+          localStorage.setItem('numeroRemision',this.numeroRemision)
+        }else{
+          this.numeroFactura++;
+          localStorage.setItem('numeroFactura',this.numeroFactura)
+        }
       },
       (error) => {
         console.error('Error al guardar la venta:', error);

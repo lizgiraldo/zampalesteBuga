@@ -24,8 +24,7 @@
               <div class="row no-gutters align-items-center">
                 <div class="col">
                   <div
-                    class="text-xs font-weight-bold text-primary text-uppercase"
-                  >
+                    class="text-xs font-weight-bold text-primary text-uppercase">
                     {{ producto.nombre }}
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">
@@ -36,8 +35,8 @@
                   </div>
                 </div>
                 <div class="col-auto">
-                  <i class="fas fa-calendar fa-2x text-gray-800">Total</i>
-                  <h5>{{ producto.total | number }}</h5>
+                  <i class="fas fa-1x text-gray-800">Total</i>
+                 <h5>$ {{ producto.total | number }}</h5>
                 </div>
               </div>
             </div>
@@ -81,7 +80,8 @@
                   </div>
                 </div>
                 <div class="col-auto">
-                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  <i *ngIf="formPago.get('tipoDocumento')?.value === 'Factura'" class="fas  fa-1x text-gray-300"> # {{numeroFactura}}</i>
+                  <i *ngIf="formPago.get('tipoDocumento')?.value === 'Remision'" class="fas  fa-1x text-gray-300"> # {{numeroRemision}}</i>
                 </div>
               </div>
             </div>
