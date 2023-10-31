@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovimientoInventario } from 'src/app/models/movimiento.model';
 import { MovimientoService } from 'src/app/services/movimiento.service';
+import { TotalVentasPorMetodoPago, TotalVentasPorVendedor, VentaService } from 'src/app/services/venta.service';
 
 @Component({
   selector: 'app-cuadre-caja',
@@ -8,54 +9,24 @@ import { MovimientoService } from 'src/app/services/movimiento.service';
   styleUrls: ['./cuadre-caja.component.css']
 })
 export class CuadreCajaComponent implements OnInit {
+  totalVentasPorVendedor!: TotalVentasPorVendedor[];
+  totalVentasPorMetodoPago!: TotalVentasPorMetodoPago[];
 
-  constructor(private movimientoService: MovimientoService) { }
-  fechaInicio!: Date;
-  fechaFin!: Date;
-  ventas: MovimientoInventario[] = [];
-  ventasTotalesPorVendedor: any[] = [];
-  ventasTotalesPorMedioPago: any[] = [];
+  constructor(private _ventaService: VentaService) { }
+
   ngOnInit(): void {
-  }
-  obtenerVentasEnRangoDeFechas(): void {
-    const fechaInicio = new Date(this.fechaInicio); // Fecha de inicio
-          const fechaFin = new Date(this.fechaFin);   // Fecha de fin
-    this.movimientoService.obtenerVentasEnRangoDeFechas(fechaInicio, fechaFin)
-      .subscribe(ventas => {
-        this.ventas = ventas;
-        this.calcularVentasTotales();
-      });
-  }
-
-  calcularVentasTotales(): void {
-    // Lógica para calcular ventas totales por vendedor y medio de pago
-    // Ejemplo de lógica para calcular ventas totales por vendedor
-    const ventasPorVendedor:{ [key: string]: number } = {};
-    this.ventas.forEach(venta => {
-      if (!ventasPorVendedor[venta.usuarioID]) {
-        ventasPorVendedor[venta.usuarioID] = 0;
-      }
-      ventasPorVendedor[venta.usuarioID] += venta.cantidad * venta.precio;
+    this._ventaService.getVentas().subscribe((ventas) => {
+      this.totalVentasPorVendedor = this._ventaService.calcularVentasPorVendedor(ventas);
+      this.totalVentasPorMetodoPago = this._ventaService.calcularTotalVentasPorMetodoPago(ventas);
     });
-
-    // Convertir el objeto a un array para el ngFor en el template
-    this.ventasTotalesPorVendedor = Object.keys(ventasPorVendedor).map(key => ({
-      vendedor: key, total: ventasPorVendedor[key]
-    }));
-
-    // Ejemplo de lógica para calcular ventas totales por medio de pago
-    const ventasPorMedioPago:{ [key: string]: number }  = {};
-    this.ventas.forEach(venta => {
-      if (!ventasPorMedioPago[venta.metodoPago]) {
-        ventasPorMedioPago[venta.metodoPago] = 0;
-      }
-      ventasPorMedioPago[venta.metodoPago] += venta.cantidad * venta.precio;
-    });
-
-    // Convertir el objeto a un array para el ngFor en el template
-    this.ventasTotalesPorMedioPago = Object.keys(ventasPorMedioPago).map(key => ({
-      medioPago: key, total: ventasPorMedioPago[key]
-    }));
   }
 
+  // total-ventas.component.ts
+calcularTotalGeneralPorMetodoPago(): number {
+  let totalGeneral = 0;
+  for (const metodoPago of this.totalVentasPorMetodoPago) {
+    totalGeneral += metodoPago.total;
+  }
+  return totalGeneral;
+}
 }

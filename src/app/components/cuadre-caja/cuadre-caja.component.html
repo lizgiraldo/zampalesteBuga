@@ -1,82 +1,61 @@
-<div class="container mt-4">
-  <h2>Ventas</h2>
 
-  <!-- Filtros de fecha -->
-  <div class="row mb-3">
-    <div class="col-6">
-      <label for="fechaInicio">Fecha de Inicio:</label>
-      <input type="date" class="form-control" id="fechaInicio" [(ngModel)]="fechaInicio">
-    </div>
-    <div class="col-6">
-      <label for="fechaFin">Fecha de Fin:</label>
-      <input type="date" class="form-control" id="fechaFin" [(ngModel)]="fechaFin">
-    </div>
-  </div>
+<app-navbar></app-navbar>
+<div class="container mt-5">
+  <h2>Total de Ventas por Vendedor</h2>
+  <table class="table table-bordered table-striped">
+    <thead class="bg-primary text-white">
+      <tr>
+        <th scope="col">Vendedor</th>
+        <th scope="col">Método de Pago</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vendedor of totalVentasPorVendedor">
+        <td>{{ vendedor.nombre_vendedor }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let metodoPago of vendedor.metodosPago">
+              {{ metodoPago.metodo }}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li *ngFor="let metodoPago of vendedor.metodosPago">
+              {{ metodoPago.total | currency: 'USD':'symbol':'1.2-2' }}
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <button class="btn btn-primary mb-3" (click)="obtenerVentasEnRangoDeFechas()">Obtener Ventas</button>
-
- <!-- Lista de ventas -->
-<div class="row">
-  <div class="col">
-    <h3>Ventas:</h3>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Vendedor</th>
-          <th>Unidades</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let venta of ventas">
-          <td>{{ venta.usuarioID }}</td>
-          <td>{{ venta.cantidad | number }}</td>
-          <td>${{ (venta.precio * venta.cantidad) | number }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h2>Total de Ventas por Método de Pago</h2>
+  <table class="table table-bordered table-striped">
+    <thead class="bg-success text-white">
+      <tr>
+        <th scope="col">Método de Pago</th>
+        <th scope="col">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let metodoPago of totalVentasPorMetodoPago">
+        <td>{{ metodoPago.metodo }}</td>
+        <td>{{ metodoPago.total | currency: 'USD':'symbol':'1.2-2' }}</td>
+      </tr>
+      <tr>
+        <td><strong>Total General</strong></td>
+        <td><strong>{{ calcularTotalGeneralPorMetodoPago() | currency: 'USD':'symbol':'1.2-2' }}</strong></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<!-- Ventas totales por vendedor -->
-<div class="row">
-  <div class="col">
-    <h3>Ventas totales por vendedor:</h3>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Vendedor</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let totalPorVendedor of ventasTotalesPorVendedor">
-          <td>{{ totalPorVendedor.vendedor }}</td>
-          <td>${{ totalPorVendedor.total | number }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 
-<!-- Ventas totales por medio de pago -->
-<div class="row">
-  <div class="col">
-    <h3>Ventas totales por medio de pago:</h3>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Medio de Pago</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let totalPorMedioPago of ventasTotalesPorMedioPago">
-          <td>{{ totalPorMedioPago.medioPago }}</td>
-          <td>${{ totalPorMedioPago.total | number }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+
+
+
+
+
 

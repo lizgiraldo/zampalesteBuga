@@ -4,6 +4,16 @@ import { Observable, from, map } from 'rxjs';
 import { Venta } from '../models/venta.model'; // Asegúrate de ajustar la ruta al modelo de Venta
 import { ProductoVendido } from '../models/productoVendido.model';
 
+
+export interface TotalVentasPorVendedor {
+  nombre_vendedor: string;
+  metodosPago: { metodo: string; total: number }[];
+}
+
+export interface TotalVentasPorMetodoPago {
+  metodo: string;
+  total: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +22,48 @@ export class VentaService {
   constructor(private firestore: AngularFirestore) {
     this.ventasCollection = firestore.collection<Venta>('Ventas');
    }
+
+
+  calcularVentasPorVendedor(ventas: Venta[]): TotalVentasPorVendedor[] {
+    const totalVentasPorVendedor: TotalVentasPorVendedor[] = [];
+
+    ventas.forEach((venta: Venta) => {
+      const existenteVendedor = totalVentasPorVendedor.find(v => v.nombre_vendedor === venta.nombre_vendedor);
+
+      if (existenteVendedor) {
+        const existenteMetodoPago = existenteVendedor.metodosPago.find(m => m.metodo === venta.metodo_pago);
+
+        if (existenteMetodoPago) {
+          existenteMetodoPago.total += venta.monto_total;
+        } else {
+          existenteVendedor.metodosPago.push({ metodo: venta.metodo_pago, total: venta.monto_total });
+        }
+      } else {
+        totalVentasPorVendedor.push({
+          nombre_vendedor: venta.nombre_vendedor,
+          metodosPago: [{ metodo: venta.metodo_pago, total: venta.monto_total }]
+        });
+      }
+    });
+
+    return totalVentasPorVendedor;
+  }
+
+  calcularTotalVentasPorMetodoPago(ventas: Venta[]): TotalVentasPorMetodoPago[] {
+    const totalVentasPorMetodoPago: TotalVentasPorMetodoPago[] = [];
+
+    ventas.forEach((venta: Venta) => {
+      const existenteMetodoPago = totalVentasPorMetodoPago.find(m => m.metodo === venta.metodo_pago);
+
+      if (existenteMetodoPago) {
+        existenteMetodoPago.total += venta.monto_total;
+      } else {
+        totalVentasPorMetodoPago.push({ metodo: venta.metodo_pago, total: venta.monto_total });
+      }
+    });
+
+    return totalVentasPorMetodoPago;
+  }
 
   getVentasDiarias(fecha: Date): Observable<Venta[]> {
     // Define la fecha de inicio y fin del día

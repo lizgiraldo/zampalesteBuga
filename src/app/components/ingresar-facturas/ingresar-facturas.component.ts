@@ -122,11 +122,11 @@ export class IngresarFacturasComponent implements OnInit {
         cantidad: producto.cantidadStock,
         productoID: producto.id,
         // Otros campos del movimiento según necesites
-        factura_numero: this.productoForm.get('facturaNumero')?.value,
+        factura_numero: this.facturaForm.get('facturaNumero')?.value,
         precio: producto.precioCompra,
-        proveedor: this.productoForm.get('proveedor')?.value,
-        metodoPago: this.productoForm.get('medioPago')?.value,
-        tipoDocumento: this.productoForm.get('tipoDocumento')?.value,
+        proveedor: this.facturaForm.get('proveedor')?.value,
+        metodoPago: this.facturaForm.get('medioPago')?.value,
+        tipoDocumento: this.facturaForm.get('tipoDocumento')?.value,
         usuarioID: ''
       };
 
