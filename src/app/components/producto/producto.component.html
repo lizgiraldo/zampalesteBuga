@@ -127,15 +127,23 @@
             <div class="row">
             <div class="form-group col-md-6">
               <label for="codigoInsumo">Código de Insumo:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="codigoInsumo"
-                formControlName="codigoInsumo"
-              />
+              <select class="form-control"
+              formControlName="codigoInsumo">
+                <option value="">Selecciona un producto</option>
+                <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+              </select>
             </div>
-            <div class="form-group col-md-6">
-              <label for="cantidadInsumo">Cantidad de Insumo:</label>
+          <div class="form-group col-md-3">
+            <label for="cantidadInsumo">Precio Venta:</label>
+            <input
+            type="text"
+            class="form-control"
+            id="codigoInsumo"
+            formControlName="precioVenta"
+          />
+          </div>
+            <div class="form-group col-md-3">
+              <label for="cantidadInsumo">Cant. Insumo:</label>
               <input
                 type="number"
                 class="form-control"

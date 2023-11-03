@@ -82,6 +82,10 @@ export class ProductoComponent implements OnInit {
     if (this.productoForm.valid) {
       const productoData = this.productoForm.value as Producto;
       if (this.editingProducto) {
+
+        if(productoData.codigoInsumo!=null){
+          productoData.cantidadStock=1000
+        }
         // Editar un producto existente
         this.productoService.updateProducto(
           this.editingProducto.id || '', // Asegúrate de obtener el ID correctamente
@@ -95,6 +99,9 @@ export class ProductoComponent implements OnInit {
         });
       } else {
         // Agregar un nuevo producto
+        if(productoData.codigoInsumo!=null){
+          productoData.cantidadStock=1000
+        }
         this.productoService.addProducto(productoData).then(() => {
           console.log('Producto agregado con éxito');
           this.productoForm.reset();
