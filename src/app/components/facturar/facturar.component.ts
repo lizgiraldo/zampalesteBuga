@@ -144,6 +144,11 @@ export class FacturarComponent implements OnInit {
     return this.productos.find(producto => producto.codigo_corto === codigo);
   }
 
+  buscarProductoPorId(codigo: string) {
+    // Implementa la lógica para buscar el producto en tu lista de productos en función del código
+    return this.productos.find(producto => producto.id === codigo);
+  }
+
   agregarProductoPorCodigo(event: Event) {
     // Busca el producto correspondiente en función del código
     event.preventDefault();
@@ -213,8 +218,13 @@ export class FacturarComponent implements OnInit {
 
     // Actualiza el stock de productos en this.productosSeleccionados
     this.productosSeleccionados.forEach(producto => {
-      producto.cantidadStock -= producto.cantidad;
 
+      if(producto.insumos){
+        let cantidad = producto.cantidad*producto.cantidadInsumo;
+        producto=this.buscarProductoPorId(producto.codigoInsumo);
+        producto.cantidad=cantidad;
+      }
+      producto.cantidadStock -= producto.cantidad;
       this.productoService
         .updateProducto(producto.id as string, producto)
         .then(() => {
