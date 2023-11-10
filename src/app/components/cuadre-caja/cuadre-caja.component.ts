@@ -12,7 +12,8 @@ export class CuadreCajaComponent implements OnInit {
   totalVentasPorVendedor!: TotalVentasPorVendedor[];
   totalVentasPorMetodoPago!: TotalVentasPorMetodoPago[];
 
-  constructor(private _ventaService: VentaService) { }
+  constructor(private _ventaService: VentaService,
+              private movimientoService: MovimientoService) { }
 
   ngOnInit(): void {
     this._ventaService.getVentas().subscribe((ventas) => {
@@ -29,4 +30,33 @@ calcularTotalGeneralPorMetodoPago(): number {
   }
   return totalGeneral;
 }
+
+
+  // Método para obtener ventas y agregar movimientos
+  procesarVentas() {
+    this._ventaService.getVentas().subscribe((ventas) => {
+      ventas.forEach((venta) => {
+        venta.productos_vendidos.forEach((producto) => {
+          const movimiento = {
+            fecha: new Date(),
+            tipoDocumento: venta.tipo_documento,
+            tipoMovimiento: 'Venta',
+            cantidad: producto.cantidad,
+            productoID: producto.id_producto,
+            usuarioID: venta.id_vendedor,
+            factura_numero: venta.numeroFactura,
+            precio: producto.precio_unitario,
+            proveedor: 'Cliente', // Puedes ajustar esto según tus necesidades
+            metodoPago: venta.metodo_pago,
+          };
+
+          this.movimientoService.agregarMovimiento(movimiento).then(() => {
+            console.log('Movimiento agregado para producto:', producto.id_producto);
+          });
+        });
+      });
+    });
+  }
+
+
 }

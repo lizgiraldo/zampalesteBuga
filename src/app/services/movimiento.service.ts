@@ -86,4 +86,5 @@ export class MovimientoService {
       ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin).where('tipoMovimiento', '==', 'Venta')
     ).valueChanges();
   }
+  
 }

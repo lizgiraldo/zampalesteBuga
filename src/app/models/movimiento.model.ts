@@ -6,7 +6,7 @@ export interface MovimientoInventario {
   productoID?: string;
   usuarioID: string;
   comentario?: string;
-  factura_numero:string;
+  factura_numero:number;
   precio:number;
   proveedor:string;
   metodoPago:string;
