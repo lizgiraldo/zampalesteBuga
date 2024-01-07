@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore/';
-import { Observable, from, map } from 'rxjs';
+import { Observable, from, map, switchMap, take } from 'rxjs';
 import { Venta } from '../models/venta.model'; // Asegúrate de ajustar la ruta al modelo de Venta
 import { ProductoVendido } from '../models/productoVendido.model';
 
@@ -22,6 +22,25 @@ export class VentaService {
   constructor(private firestore: AngularFirestore) {
     this.ventasCollection = firestore.collection<Venta>('Ventas');
    }
+
+
+   deleteColeccionVentas():Observable<void>{
+    return this.firestore
+      .collection("Ventas")
+      .get()
+      .pipe(
+        take(1),
+        switchMap((querySnapshot) => {
+          const batch = this.firestore.firestore.batch();
+
+          querySnapshot.forEach((doc) => {
+            batch.delete(doc.ref);
+          });
+
+          return from(batch.commit());
+        })
+      );
+  }
 
 
   calcularVentasPorVendedor(ventas: Venta[]): TotalVentasPorVendedor[] {

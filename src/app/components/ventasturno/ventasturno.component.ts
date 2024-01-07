@@ -17,8 +17,10 @@ export class VentasturnoComponent implements OnInit {
   ngOnInit(): void {
     // Obtener las ventas usando el servicio
     this.ventaService.getVentas().subscribe(ventas => {
-      this.ventas = ventas;
+      // Ordenar las ventas por número de factura de forma ascendente
+      this.ventas = ventas.sort((a, b) => a.numeroFactura - b.numeroFactura);
     });
+
   }
 
   // Método para eliminar una venta

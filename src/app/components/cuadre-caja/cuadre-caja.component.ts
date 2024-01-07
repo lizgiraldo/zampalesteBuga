@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MovimientoInventario } from 'src/app/models/movimiento.model';
 import { MovimientoService } from 'src/app/services/movimiento.service';
 import { TotalVentasPorMetodoPago, TotalVentasPorVendedor, VentaService } from 'src/app/services/venta.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cuadre-caja',
@@ -53,6 +54,19 @@ calcularTotalGeneralPorMetodoPago(): number {
           this.movimientoService.agregarMovimiento(movimiento).then(() => {
             console.log('Movimiento agregado para producto:', producto.id_producto);
           });
+
+          this._ventaService.deleteColeccionVentas().subscribe(
+            () => Swal.fire({
+              title: "A descansar!",
+              text: "El turno se cerro correctamente !",
+              icon: "success"
+            }),
+            (error) => Swal.fire({
+              title: "A descansar!",
+              text: "El turno no se cerro correctamente !"+error,
+              icon: "error"
+            })
+          );
         });
       });
     });

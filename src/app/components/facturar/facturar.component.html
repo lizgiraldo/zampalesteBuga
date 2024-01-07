@@ -4,6 +4,10 @@
   <select class="form-select form-select-lg my-3" formControlName="tipoDocumento" aria-label=".form-select-lg">
     <option value="Factura" selected>Facturación</option>
     <option value="Remision">Remisión</option>
+    <!-- <option value="Remision">Obsequio</option>
+    <option value="Remision">Consumo Interno</option>
+    <option value="Remision">Precio Especial</option> -->
+
   </select>
   <div class="row ensayo mt-2">
     <div class="card col-5">
@@ -37,6 +41,11 @@
                 <div class="col-auto">
                   <i class="fas fa-1x text-gray-800">Total</i>
                  <h5>$ {{ producto.total | number }}</h5>
+                  <div class="d-flex flex-row">
+                    <div type="button" class="p-2 text-primary" (click)="restarElemento(producto.id)"><i class="fas fa-circle-minus"></i></div>
+                    <div type="button" class="p-2 text-success" (click)="agregarElemento(producto)"><i class="fas fa-circle-plus"></i></div>
+                    <div type="button" class="p-2 text-danger"  (click)="eliminarElemento(producto.id)"><i class="fas fa-trash"></i></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -94,7 +103,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Nombre</th>
-              <th scope="col">Codigo Corto</th>
+              <th scope="col">Cod Corto</th>
               <th scope="col">Descripción</th>
               <th scope="col">Precio</th>
               <th scope="col">Stock</th>
@@ -122,7 +131,7 @@
     <div class="modal-header">
       <h4 class="modal-title pull-left">Seleccione modo de Pago</h4>
       <button
-        type="button"
+
         class="btn-close close pull-right"
         aria-label="Close"
         (click)="modalRef.hide()"

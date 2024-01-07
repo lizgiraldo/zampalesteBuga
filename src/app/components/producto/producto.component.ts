@@ -41,6 +41,8 @@ export class ProductoComponent implements OnInit {
       insumos: [false],
       codigoInsumo: [''],
       cantidadInsumo: [0],
+      promocion:[],
+      precio_promocion:[],
       estado: ['activo',Validators.required]
     });
 

@@ -23,7 +23,6 @@
         ngbAutofocus
         (click)="descargarCSV()"
         class="form-control mt-4 btn btn-primary"
-
       >
         Exportar Excel
       </button>
@@ -40,7 +39,7 @@
           <th scope="col">Precio Venta</th>
           <th scope="col">Precio Compra</th>
           <th scope="col">Stock</th>
-          <th scope="col">Stock Mín</th>
+          <th scope="col">Promo</th>
           <th scope="col">Acciones</th>
         </tr>
       </thead>
@@ -50,16 +49,14 @@
           <td>{{ producto.nombre }}</td>
           <td>{{ producto.codigo_corto }}</td>
           <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.precioVenta }}</td>
-          <td>{{ producto.precioCompra }}</td>
-          <td>{{ producto.cantidadStock }}</td>
-          <td>{{ producto.stockMinimo }}</td>
+          <td>{{ producto.precioVenta |number}}</td>
+          <td>{{ producto.precioCompra|number }}</td>
+          <td>{{ producto.cantidadStock|number }}</td>
+          <td>{{ producto.precio_promocion|number }}</td>
           <td>
-            <button class="btn btn-success btn-sm"
-              (click)="editarProducto(producto, contenido)" >
-            <i class="fas fa-edit"></i>
+            <button class="btn btn-success btn-sm" (click)="editarProducto(producto, contenido)">
+              <i class="fas fa-edit"></i>
             </button>
-
           </td>
         </tr>
       </tbody>
@@ -104,7 +101,6 @@
                 formControlName="stockMinimo"
               />
             </div>
-
           </div>
           <div class="form-group">
             <label for="descripcion">Descripción:</label>
@@ -117,7 +113,12 @@
           </div>
           <div class="form-group mt-1 form-inline">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="insumos" formControlName="insumos">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="insumos"
+                formControlName="insumos"
+              />
               <label class="form-check-label" for="insumos">
                 ¿Necesita Insumo?
               </label>
@@ -125,58 +126,81 @@
           </div>
           <div *ngIf="productoForm.get('insumos')?.value">
             <div class="row">
-            <div class="form-group col-md-6">
-              <label for="codigoInsumo">Código de Insumo:</label>
-              <select class="form-control"
-              formControlName="codigoInsumo">
-                <option value="">Selecciona un producto</option>
-                <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
-              </select>
+              <div class="form-group col-md-6">
+                <label for="codigoInsumo">Código de Insumo:</label>
+                <select class="form-control" formControlName="codigoInsumo">
+                  <option value="">Selecciona un producto</option>
+                  <ng-container *ngFor="let producto of productos">
+                    <option *ngIf="producto.estado === 'activo' && producto.precioVenta > 0" [value]="producto.id">
+                      {{ producto.nombre }}
+                    </option>
+                  </ng-container>
+                </select>
+
+              </div>
+              <div class="form-group col-md-3">
+                <label for="cantidadInsumo">Precio Venta:</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="codigoInsumo"
+                  formControlName="precioVenta"
+                />
+              </div>
+              <div class="form-group col-md-3">
+                <label for="cantidadInsumo">Cant. Insumo:</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="cantidadInsumo"
+                  formControlName="cantidadInsumo"
+                />
+              </div>
             </div>
-          <div class="form-group col-md-3">
-            <label for="cantidadInsumo">Precio Venta:</label>
-            <input
-            type="number"
-            class="form-control"
-            id="codigoInsumo"
-            formControlName="precioVenta"
-          />
-          </div>
-            <div class="form-group col-md-3">
-              <label for="cantidadInsumo">Cant. Insumo:</label>
-              <input
-                type="number"
-                class="form-control"
-                id="cantidadInsumo"
-                formControlName="cantidadInsumo"
-              />
-            </div>
-          </div>
           </div>
 
           Estado Producto:&ensp;
           <div class="form-check form-check-inline mt-2">
-            <input class="form-check-input" type="radio" id="estadoActivo" value="activo" formControlName="estado" checked>
-            <label class="form-check-label" for="estadoActivo">
-              Activo
-            </label>
+            <input
+              class="form-check-input"
+              type="radio"
+              id="estadoActivo"
+              value="activo"
+              formControlName="estado"
+              checked
+            />
+            <label class="form-check-label" for="estadoActivo"> Activo </label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="estadoInactivo" value="inactivo" formControlName="estado">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="estadoInactivo"
+              value="inactivo"
+              formControlName="estado"
+            />
             <label class="form-check-label" for="estadoInactivo">
               Inactivo
             </label>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" [disabled]="!productoForm.valid" class="btn btn-primary">Guardar</button>
-          <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Cerrar</button>
+          <button
+            type="submit"
+            [disabled]="!productoForm.valid"
+            class="btn btn-primary"
+          >
+            Guardar
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="modalRef.hide()"
+          >
+            Cerrar
+          </button>
         </div>
       </div>
     </form>
   </ng-template>
-
-
-
-
 </div>

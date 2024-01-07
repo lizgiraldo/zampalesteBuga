@@ -57,7 +57,7 @@ export class FacturarComponent implements OnInit {
 
     this.productoService.getProductos().subscribe(
       (productos) => {
-        this.productos = productos.filter(producto=>producto.precioVenta>0);
+        this.productos = productos.filter(producto=>producto.precioVenta>0 && producto.estado=='activo');
         this.productos$ = this.filter.valueChanges.pipe(
           startWith(''),
           map((text) => this.search(text))
@@ -88,7 +88,7 @@ export class FacturarComponent implements OnInit {
       /** spinner ends after 5 seconds */
       this.spinner.hide();
     }, 1500);
-    this.loadProductos();
+    //this.loadProductos();
   }
 
   ngAfterViewInit(): void {
@@ -133,7 +133,9 @@ export class FacturarComponent implements OnInit {
       productoExistente.total = productoExistente.cantidad * productoExistente.precioVenta;
     } else {
       // Si el producto no existe en la lista, agrégalo con cantidad 1.
-      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.precioVenta });
+      //totalizar aca para que muestre el precio
+      item.total=this.cantidadProductoSelecionado *item.precioVenta;
+      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.total });
     }
     this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
     this.cantidadProductoSelecionado=1;
@@ -248,5 +250,36 @@ export class FacturarComponent implements OnInit {
   openModal(contenido:any){
     this.modalRef = this.modalService.show(contenido);
     this.editState = false;
+  }
+
+  eliminarElemento(id: string){
+        // Buscar el índice del producto en la lista
+      const indice = this.productosSeleccionados.findIndex((p) => p.id === id);
+
+      // Verificar si el producto está en la lista
+      if (indice !== -1) {
+        // Eliminar el producto del array
+        this.productosSeleccionados.splice(indice, 1);
+
+        // Recalcular el total general
+        this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
+      }
+  }
+  restarElemento(id: string) {
+    // Buscar el índice del producto en la lista
+    const indice = this.productosSeleccionados.findIndex((p) => p.id === id);
+
+    // Verificar si el producto está en la lista y tiene cantidad mayor a 1
+    if (indice !== -1 && this.productosSeleccionados[indice].cantidad > 1) {
+      // Restar uno a la cantidad del producto
+      this.productosSeleccionados[indice].cantidad--;
+
+      // Actualizar el total del producto
+      this.productosSeleccionados[indice].total =
+        this.productosSeleccionados[indice].cantidad * this.productosSeleccionados[indice].precioVenta;
+
+      // Recalcular el total general
+      this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
+    }
   }
 }

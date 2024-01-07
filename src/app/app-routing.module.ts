@@ -15,7 +15,7 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
 import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'login', pathMatch:'full'},
+  {path: '', redirectTo: 'dashboard', pathMatch:'full'},
 {path: 'login', component: LoginComponent},
 {path: 'registrarUsuario', component: RegistrarUsuarioComponent},
 {path: 'dashboard', component: DashboardComponent},

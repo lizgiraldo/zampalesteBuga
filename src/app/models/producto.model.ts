@@ -12,6 +12,8 @@ export interface Producto {
   insumos:boolean;
   codigoInsumo?:string;
   cantidadInsumo?:number;
+  promocion?:boolean;
+  precio_promocion?:number;
   estado:string;
 }
 
