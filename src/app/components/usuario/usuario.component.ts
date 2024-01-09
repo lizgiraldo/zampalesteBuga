@@ -5,6 +5,7 @@ import * as Papa from 'papaparse';
 import { Observable, startWith, map } from 'rxjs';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { AlertService } from 'src/app/shared/services/alert.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -25,7 +26,8 @@ export class UsuarioComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private _usuarioService: UsuarioService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private _alert:AlertService
   ) {
     this.usuarioForm = this.formBuilder.group({
       identificacion: ['', Validators.required],
@@ -78,26 +80,30 @@ export class UsuarioComponent implements OnInit {
           this.editingUsuario.id || '',
           usuarioData
         ).then(() => {
-          console.log('Usuario actualizado con éxito');
+          this._alert.showSuccessMessage("Exitoo!",'Usuario actualizado con éxito');
           this.editingUsuario = null;
           this.usuarioForm.reset();
-          this.mostrarMensaje('Usuario actualizado con éxito');
           this.modalRef.hide();
         }).catch((error: any) => {
-          console.error('Error al actualizar usuario:', error);
-          this.mostrarMensaje('Error al actualizar usuario', 'error');
+          this._alert.showErrorMessage('Error al actualizar usuario:', error);
           this.modalRef.hide();
         });
       } else {
         this._usuarioService.crearUsuario(usuarioData).subscribe(() => {
-          console.log('Usuario agregado con éxito');
+          this._alert.showSuccessMessage("Super!!!",'Usuario agregado con éxito');
           this.usuarioForm.reset();
-          this.mostrarMensaje('Usuario agregado con éxito');
           this.modalRef.hide();
+        },
+        error => {
+          // Manejar el error
+          console.error('Error al crear usuario:', error);
+
+          // Puedes mostrar un mensaje de error al usuario si lo deseas
+          this._alert.showErrorMessage('No se pudo agregar el usuario.',error);
         })
       }
     } else {
-      this.mostrarMensaje('Por favor, completa el formulario correctamente', 'error');
+      this._alert.showInfoMessage("Uyyyyy","Faltaron algunos campos por favor verifica")
     }
   }
 
@@ -120,11 +126,9 @@ export class UsuarioComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this._usuarioService.eliminarUsuario(id).then(() => {
-          console.log('Usuario eliminado con éxito');
-          this.mostrarMensaje('Usuario eliminado con éxito');
+          this._alert.showInfoMessage("Ahh...",'Usuario eliminado con éxito');
         }).catch((error: any) => {
-          console.error('Error al eliminar usuario:', error);
-          this.mostrarMensaje('Error al eliminar usuario', 'error');
+          this._alert.showErrorMessage('Error al eliminar usuario:', error);
         });
       }
     });
@@ -134,11 +138,9 @@ export class UsuarioComponent implements OnInit {
     this._usuarioService.getUsuario(id).subscribe((usuario:any) => {
       usuario.estado = 'inactivo';
       this._usuarioService.actualizarUsuario(id, usuario).then(() => {
-        console.log('Estado del usuario cambiado a inactivo con éxito');
-        this.mostrarMensaje('Estado del usuario cambiado a inactivo con éxito');
+        this._alert.showInfoMessage("Buenooo...",'Estado del usuario cambiado a inactivo con éxito');
       }).catch((error: any) => {
-        console.error('Error al cambiar estado del usuario:', error);
-        this.mostrarMensaje('Error al cambiar estado del usuario', 'error');
+        this._alert.showErrorMessage('Error al cambiar estado del usuario:', error);
       });
     });
   }
@@ -175,15 +177,5 @@ export class UsuarioComponent implements OnInit {
     a.download = fileName;
     a.click();
     window.URL.revokeObjectURL(url);
-  }
-
-  mostrarMensaje(mensaje: string, tipo: 'success' | 'error' = 'success'): void {
-    Swal.fire({
-      position: 'top-end',
-      icon: tipo,
-      title: mensaje,
-      showConfirmButton: false,
-      timer: 1500
-    });
   }
 }

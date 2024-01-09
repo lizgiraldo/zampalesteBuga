@@ -1,3 +1,4 @@
+import { AuthComponent } from './components/auth/auth.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
@@ -15,9 +16,8 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
 import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'dashboard', pathMatch:'full'},
-{path: 'login', component: LoginComponent},
-{path: 'registrarUsuario', component: RegistrarUsuarioComponent},
+  {path: '', redirectTo: 'auth', pathMatch:'full'},
+  {path: 'auth', component: AuthComponent},
 {path: 'dashboard', component: DashboardComponent},
 {path: 'productos', component: ProductoComponent},
 {path: 'facturar', component: FacturarComponent},
@@ -29,7 +29,7 @@ const routes: Routes = [
 {path: 'proveedores', component: ProveedorComponent},
 {path: 'usuarios', component: UsuarioComponent},
 {path: 'ventasTurno', component: VentasturnoComponent},
-  {path: '**', redirectTo: 'login', pathMatch:'full'},
+  {path: '**', redirectTo: 'auth', pathMatch:'full'},
 
 
 ];

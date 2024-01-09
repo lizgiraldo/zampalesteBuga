@@ -39,6 +39,7 @@ import { VerMovimientosComponent } from './components/ver-movimientos/ver-movimi
 import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
+import { AuthComponent } from './components/auth/auth.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { VentasturnoComponent } from './components/ventasturno/ventasturno.compo
     CuadreCajaComponent,
     ProveedorComponent,
     UsuarioComponent,
-    VentasturnoComponent
+    VentasturnoComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,

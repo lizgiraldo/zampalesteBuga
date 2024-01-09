@@ -1,22 +1,23 @@
+<!-- navbar.component.html -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse " id="navbarSupportedContent">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only"></span></a>
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/facturar">Facturar</a>
       </li>
-      <div class="btn-group" dropdown>
+      <li class="nav-item btn-group" dropdown>
         <a id="button-menu-dividers" dropdownToggle type="button" class="nav-link dropdown-toggle"
-                aria-controls="dropdown-menu-dividers">
+           aria-controls="dropdown-menu-dividers">
           Ingresar <span class="caret"></span>
-      </a>
+        </a>
         <ul id="dropdown-menu-dividers" *dropdownMenu class="dropdown-menu"
             role="menu" aria-labelledby="button-menu-dividers">
           <li role="menuitem"><a class="dropdown-item" routerLink="/productos">Productos</a></li>
@@ -24,22 +25,25 @@
           <li role="menuitem"><a class="dropdown-item" routerLink="/usuarios">Usuarios</a></li>
           <li class="divider dropdown-divider"></li>
           <li role="menuitem"><a class="dropdown-item" routerLink="/ingresarFacturas">Facturas</a></li>
-
         </ul>
-      </div>
-      <div class="btn-group" dropdown>
-        <a id="button-menu-dividers" dropdownToggle type="button" class="nav-link dropdown-toggle"
-                aria-controls="dropdown-menu-dividers">
+      </li>
+      <li class="nav-item btn-group" dropdown>
+        <a id="button-menu-movimientos" dropdownToggle type="button" class="nav-link dropdown-toggle"
+           aria-controls="dropdown-menu-movimientos">
           Movimientos <span class="caret"></span>
-      </a>
-        <ul id="dropdown-menu-dividers" *dropdownMenu class="dropdown-menu"
-            role="menu" aria-labelledby="button-menu-dividers">
+        </a>
+        <ul id="dropdown-menu-movimientos" *dropdownMenu class="dropdown-menu"
+            role="menu" aria-labelledby="button-menu-movimientos">
           <li role="menuitem"><a class="dropdown-item" routerLink="/movimientos">Por Fecha</a></li>
-          <li role="menuitem"><a class="dropdown-item" routerLink="/ventasTurno">Ventas Turno</a>
-          <li role="menuitem"><a class="dropdown-item" routerLink="/cuadrarCaja">Cerrar Turno</a>
-          </li>
+          <li role="menuitem"><a class="dropdown-item" routerLink="/ventasTurno">Ventas Turno</a></li>
+          <li role="menuitem"><a class="dropdown-item" routerLink="/cuadrarCaja">Cerrar Turno</a></li>
         </ul>
-      </div>
+      </li>
+      <li class="nav-item btn-group position-absolute top-0 end-0">
+        <a type="button" class="nav-link" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+        </a>
+      </li>
     </ul>
   </div>
 </nav>
