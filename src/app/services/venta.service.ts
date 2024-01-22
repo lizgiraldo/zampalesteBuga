@@ -156,28 +156,33 @@ export class VentaService {
 
   deleteVenta(ventaId: string, productosVendidos: ProductoVendido[]): Observable<any> {
     return from(this.firestore.firestore.runTransaction(async transaction => {
-      // Obtener la venta y eliminarla
       const ventaRef = this.firestore.collection('Ventas').doc(ventaId).ref;
       const ventaDoc = await transaction.get(ventaRef);
+
       if (!ventaDoc.exists) {
         throw new Error('La venta no existe.');
       }
 
-
-      // Actualizar el stock de los productos vendidos
-      const promises = productosVendidos.map(producto => {
+      const promises = productosVendidos.map(async (producto) => {
         const productoRef = this.firestore.collection('productos').doc(producto.id_producto).ref;
-        return transaction.get(productoRef).then((productoDoc:any) => {
-          if (!productoDoc.exists) {
-            throw new Error('El producto no existe.');
-          }
-          const cantidadStockActual = productoDoc.data().cantidadStock;
-          const nuevaCantidadStock = cantidadStockActual + producto.cantidad;
-          transaction.update(productoRef, { cantidadStock: nuevaCantidadStock });
-        });
+        const productoDoc = await transaction.get(productoRef);
+
+        if (!productoDoc.exists) {
+          throw new Error('El producto no existe.');
+        }
+
+        // Proporciona un tipo específico para productoDoc.data()
+        const data = productoDoc.data() as { cantidadStock: number };
+
+        const cantidadStockActual = data.cantidadStock;
+        const nuevaCantidadStock = cantidadStockActual + producto.cantidad;
+        transaction.update(productoRef, { cantidadStock: nuevaCantidadStock });
       });
+
       transaction.delete(ventaRef);
-      return Promise.all(promises);
+
+      await Promise.all(promises);
     }));
   }
+
 }
