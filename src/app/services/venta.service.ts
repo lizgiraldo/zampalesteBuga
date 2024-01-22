@@ -197,9 +197,8 @@ export class VentaService {
         transaction.update(productoRef, { cantidadStock: nuevaCantidadStock });
       });
 
-      transaction.delete(ventaRef);
-
       await Promise.all(promises);
+      transaction.delete(ventaRef);
     }));
   }
 
