@@ -172,9 +172,27 @@ export class VentaService {
         }
 
         // Proporciona un tipo específico para productoDoc.data()
-        const data = productoDoc.data() as { cantidadStock: number };
+        const data = productoDoc.data() as { cantidadStock: number, insumos?: boolean, codigoInsumo?: string, cantidadInsumo?: number };
 
         const cantidadStockActual = data.cantidadStock;
+
+        // Verifica si el producto es un insumo y tiene un código de insumo y cantidadInsumo
+        if (data.insumos && data.codigoInsumo && data.cantidadInsumo) {
+          // Obtén el producto de insumo
+          const insumoRef = this.firestore.collection('productos').doc(data.codigoInsumo).ref;
+          const insumoDoc = await transaction.get(insumoRef);
+
+          if (!insumoDoc.exists) {
+            throw new Error('El producto de insumo no existe.');
+          }
+
+          // Actualiza el stock del producto de insumo
+          const cantidadStockInsumoActual = insumoDoc.data() as {cantidadStock:number};
+          const nuevaCantidadStockInsumo = cantidadStockInsumoActual.cantidadStock + data.cantidadInsumo;
+          transaction.update(insumoRef, { cantidadStock: nuevaCantidadStockInsumo });
+        }
+
+        // Devuelve el stock del producto vendido
         const nuevaCantidadStock = cantidadStockActual + producto.cantidad;
         transaction.update(productoRef, { cantidadStock: nuevaCantidadStock });
       });
@@ -184,5 +202,6 @@ export class VentaService {
       await Promise.all(promises);
     }));
   }
+
 
 }
