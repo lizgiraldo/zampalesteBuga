@@ -73,7 +73,7 @@ export class FacturarComponent implements OnInit {
 
     this.formPago = this.fb.group({
       tipoDocumento:['Factura'],
-      vendedor: [],
+      vendedor: ["",Validators.required],
       metodoPago : ['Efectivo'],
       // Agrega más campos según tus necesidades
     });
@@ -282,4 +282,6 @@ export class FacturarComponent implements OnInit {
       this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
     }
   }
+
+
 }

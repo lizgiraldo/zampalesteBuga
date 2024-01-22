@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 export class CuadreCajaComponent implements OnInit {
   totalVentasPorVendedor!: TotalVentasPorVendedor[];
   totalVentasPorMetodoPago!: TotalVentasPorMetodoPago[];
+  ventasSubcripcion: any;
 
   constructor(private _ventaService: VentaService,
               private movimientoService: MovimientoService) { }
@@ -35,13 +36,13 @@ calcularTotalGeneralPorMetodoPago(): number {
 
   // Método para obtener ventas y agregar movimientos
   procesarVentas() {
-    this._ventaService.getVentas().subscribe((ventas) => {
+    this.ventasSubcripcion =this._ventaService.getVentas().subscribe((ventas) => {
       ventas.forEach((venta) => {
         venta.productos_vendidos.forEach((producto) => {
           const movimiento = {
             fecha: new Date(),
             tipoDocumento: venta.tipo_documento,
-            tipoMovimiento: 'Venta',
+            tipoMovimiento: 'Salida',//antes estaba Venta
             cantidad: producto.cantidad,
             productoID: producto.id_producto,
             usuarioID: venta.id_vendedor,
@@ -72,5 +73,13 @@ calcularTotalGeneralPorMetodoPago(): number {
     });
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    if(this.ventasSubcripcion){
+      this.ventasSubcripcion.unsubscribe();
+    }
+
+  }
 
 }

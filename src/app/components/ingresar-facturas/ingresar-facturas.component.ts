@@ -45,6 +45,12 @@ export class IngresarFacturasComponent implements OnInit {
     this.productoForm = this.formBuilder.group({
       precioCompra: ['', Validators.required],
       precioVenta: ['', Validators.required],
+      precioJueves: [''],
+      precioViernes: [''],
+      precioSabado: [''],
+      precioDomingo: [''],
+      precioLunes: [''],
+
       cantidad: ['', Validators.required],
     });
     this.facturaForm = this.formBuilder.group({
@@ -53,6 +59,7 @@ export class IngresarFacturasComponent implements OnInit {
       medioPago: ['', Validators.required],  // Control para el select de medios de pago
       proveedor: ['', Validators.required],   // Control para el select de proveedores
       tipoDocumento: ['', Validators.required]   // Control para el select de proveedores
+
 
     });
   }
@@ -85,7 +92,7 @@ export class IngresarFacturasComponent implements OnInit {
       };
 
       this.productosSeleccionados.push(productoConCantidad);
-      this.totalPrecioCompra += productoConCantidad.precioCompra * cantidadIngresada;
+      this.totalPrecioCompra += productoConCantidad.precioCompra * productoConCantidad.cantidadIngresada;
       this.productoSeleccionado = {} as Producto; // Limpiamos el producto seleccionado
       this.productoForm.reset(); // Limpiamos el formulario
     }

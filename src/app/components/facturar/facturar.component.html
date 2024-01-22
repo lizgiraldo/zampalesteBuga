@@ -4,9 +4,7 @@
   <select class="form-select form-select-lg my-3" formControlName="tipoDocumento" aria-label=".form-select-lg">
     <option value="Factura" selected>Facturación</option>
     <option value="Remision">Remisión</option>
-    <!-- <option value="Remision">Obsequio</option>
-    <option value="Remision">Consumo Interno</option>
-    <option value="Remision">Precio Especial</option> -->
+    <option value="Obsequio">Obsequio</option>
 
   </select>
   <div class="row ensayo mt-2">
@@ -152,9 +150,14 @@
       <button type="button" class="btn btn-primary" popover="Vivamus sagittis">
         LIstos Para pagar?
       </button>
-      <button type="button" (click)="pasoPago();modalRef.hide()" class="btn btn-primary" tooltip="Vivamus sagittis">
+      <button type="button" [disabled]="formPago.invalid" (click)="pasoPago();modalRef.hide()" class="btn btn-primary" tooltip="Vivamus sagittis">
         Pagar
       </button>
+
+      <div class="mt-2" *ngIf="formPago.invalid" style="color: red;">
+        Verifica por favor que no falte seleccionar campos.
+      </div>
+
     </div>
   </ng-template>
 </form>

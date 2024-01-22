@@ -14,6 +14,7 @@ import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.compon
 import { ProveedorComponent } from './components/proveedor/proveedor.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
+import { MovimientosMensualComponent } from './components/movimientos-mensual/movimientos-mensual.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'auth', pathMatch:'full'},
@@ -22,6 +23,7 @@ const routes: Routes = [
 {path: 'productos', component: ProductoComponent},
 {path: 'facturar', component: FacturarComponent},
 {path: 'movimientos', component: VerMovimientosComponent},
+{path: 'mensual', component: MovimientosMensualComponent},
 {path: 'ingresarFacturas', component: IngresarFacturasComponent},
 {path: 'recuperarPassword', component: RecuperarPasswordComponent},
 {path: 'verificarCorreo', component: VerificarCorreoComponent},
@@ -29,7 +31,7 @@ const routes: Routes = [
 {path: 'proveedores', component: ProveedorComponent},
 {path: 'usuarios', component: UsuarioComponent},
 {path: 'ventasTurno', component: VentasturnoComponent},
-  {path: '**', redirectTo: 'auth', pathMatch:'full'},
+{path: '**', redirectTo: 'auth', pathMatch:'full'},
 
 
 ];

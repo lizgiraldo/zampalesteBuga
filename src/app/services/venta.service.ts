@@ -3,6 +3,8 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } fr
 import { Observable, from, map, switchMap, take } from 'rxjs';
 import { Venta } from '../models/venta.model'; // Asegúrate de ajustar la ruta al modelo de Venta
 import { ProductoVendido } from '../models/productoVendido.model';
+import { Producto } from '../models/producto.model';
+import { ProductoService } from './producto.service';
 
 
 export interface TotalVentasPorVendedor {
@@ -19,7 +21,7 @@ export interface TotalVentasPorMetodoPago {
 })
 export class VentaService {
   private ventasCollection: AngularFirestoreCollection<Venta>;
-  constructor(private firestore: AngularFirestore) {
+  constructor(private firestore: AngularFirestore,private _productosService:ProductoService) {
     this.ventasCollection = firestore.collection<Venta>('Ventas');
    }
 
@@ -47,21 +49,23 @@ export class VentaService {
     const totalVentasPorVendedor: TotalVentasPorVendedor[] = [];
 
     ventas.forEach((venta: Venta) => {
-      const existenteVendedor = totalVentasPorVendedor.find(v => v.nombre_vendedor === venta.nombre_vendedor);
+      if (venta.tipo_documento !== "Obsequio") {  // Excluir ventas de tipo "Obsequio"
+        const existenteVendedor = totalVentasPorVendedor.find(v => v.nombre_vendedor === venta.nombre_vendedor);
 
-      if (existenteVendedor) {
-        const existenteMetodoPago = existenteVendedor.metodosPago.find(m => m.metodo === venta.metodo_pago);
+        if (existenteVendedor) {
+          const existenteMetodoPago = existenteVendedor.metodosPago.find(m => m.metodo === venta.metodo_pago);
 
-        if (existenteMetodoPago) {
-          existenteMetodoPago.total += venta.monto_total;
+          if (existenteMetodoPago) {
+            existenteMetodoPago.total += venta.monto_total;
+          } else {
+            existenteVendedor.metodosPago.push({ metodo: venta.metodo_pago, total: venta.monto_total });
+          }
         } else {
-          existenteVendedor.metodosPago.push({ metodo: venta.metodo_pago, total: venta.monto_total });
+          totalVentasPorVendedor.push({
+            nombre_vendedor: venta.nombre_vendedor,
+            metodosPago: [{ metodo: venta.metodo_pago, total: venta.monto_total }]
+          });
         }
-      } else {
-        totalVentasPorVendedor.push({
-          nombre_vendedor: venta.nombre_vendedor,
-          metodosPago: [{ metodo: venta.metodo_pago, total: venta.monto_total }]
-        });
       }
     });
 
@@ -72,13 +76,15 @@ export class VentaService {
     const totalVentasPorMetodoPago: TotalVentasPorMetodoPago[] = [];
 
     ventas.forEach((venta: Venta) => {
-      const existenteMetodoPago = totalVentasPorMetodoPago.find(m => m.metodo === venta.metodo_pago);
+      if (venta.tipo_documento !== "Obsequio") {
+      const existenteMetodoPago = totalVentasPorMetodoPago.find(m => m.metodo === venta.metodo_pago && venta.tipo_documento!="Obsequio");
 
       if (existenteMetodoPago) {
         existenteMetodoPago.total += venta.monto_total;
       } else {
         totalVentasPorMetodoPago.push({ metodo: venta.metodo_pago, total: venta.monto_total });
       }
+    }
     });
 
     return totalVentasPorMetodoPago;

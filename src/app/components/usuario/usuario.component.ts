@@ -95,11 +95,10 @@ export class UsuarioComponent implements OnInit {
           this.modalRef.hide();
         },
         error => {
-          // Manejar el error
-          console.error('Error al crear usuario:', error);
-
-          // Puedes mostrar un mensaje de error al usuario si lo deseas
-          this._alert.showErrorMessage('No se pudo agregar el usuario.',error);
+                  // Puedes mostrar un mensaje de error al usuario si lo deseas
+          //this._alert.showErrorMessage('No se pudo agregar el usuario.',error);
+          this.usuarioForm.reset();
+          this.modalRef.hide();
         })
       }
     } else {

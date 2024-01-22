@@ -32,8 +32,9 @@ export class VerMovimientosComponent implements OnInit {
 
           const fechaInicio = new Date(this.fechaInicio); // Fecha de inicio
           const fechaFin = new Date(this.fechaFin);   // Fecha de fin
+          this.movimientos.length=0;
 
-        this.movimientoService.getMovimientosConNombresEnRangoDeFechas(fechaInicio,fechaFin).subscribe(movimientos => {
+        this.movimientoService.getMovimientosConNombresEnRangoDeFechas(fechaInicio).subscribe(movimientos => {
           this.totalItems = movimientos.length;
           this.movimientos = movimientos.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
         });

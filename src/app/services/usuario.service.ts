@@ -1,48 +1,54 @@
 import { Usuario } from '../models/usuario.model';
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireAuth} from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore/';
-import { Observable, catchError, from, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, catchError, from, map, of, startWith, switchMap, take, throwError } from 'rxjs';
+import { Auth, createUserWithEmailAndPassword, updateCurrentUser } from 'firebase/auth';
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   private usuariosCollection: AngularFirestoreCollection<Usuario>;
 
-  constructor(private afAuth: AngularFireAuth, private firestore: AngularFirestore) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore) {
     this.usuariosCollection = firestore.collection<Usuario>('usuarios');
   }
 
+
   crearUsuario(usuario: Usuario): Observable<void> {
-    usuario.password='Osdo123456';
+    usuario.password = 'Osdo123456';
+
     return this.afAuth.authState.pipe(
+      take(1),
       switchMap((user) => {
-        if (user) {
-          return from(this.afAuth.createUserWithEmailAndPassword(usuario.correo, usuario.password)).pipe(
-            switchMap((userCredential: any) => {
-              const newUser: Usuario = {
-                id: userCredential.user?.uid,
-                nombre: usuario.nombre,
-                correo: usuario.correo,
-                identificacion: usuario.identificacion,
-                direccion: usuario.direccion,
-                telefono: usuario.telefono,
-                password:usuario.password,
-                rol: usuario.rol,
-                estado: usuario.estado
-                // Agrega más campos según sea necesario
-              };
-              return this.usuariosCollection.doc(userCredential.user?.uid).set(newUser);
-            })
-          );
-        } else {
-          return new Observable<void>((observer) => {
-            observer.error('No hay usuario autenticado.');
-          });
+        if (!user) {
+          return throwError('No hay usuario autenticado.');
         }
+
+        return from(this.afAuth.createUserWithEmailAndPassword(usuario.correo, usuario.password)).pipe(
+          switchMap((userCredential: any) => {
+            const newUser: Usuario = {
+              id: userCredential.user?.uid,
+              nombre: usuario.nombre,
+              correo: usuario.correo,
+              identificacion: usuario.identificacion,
+              direccion: usuario.direccion,
+              telefono: usuario.telefono,
+              password: usuario.password,
+              rol: usuario.rol,
+              estado: usuario.estado
+              // Agrega más campos según sea necesario
+            };
+
+            return from(this.usuariosCollection.doc(userCredential.user?.uid).set(newUser));
+          })
+        );
       })
     );
   }
+
 
    // Método para obtener usuarios
    getUsuarios(): Observable<Usuario[]> {
@@ -98,4 +104,6 @@ export class UsuarioService {
   eliminarUsuario(id: string): Promise<void> {
     return this.usuariosCollection.doc(id).delete();
   }
+
+
 }

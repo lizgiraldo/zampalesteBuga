@@ -1,3 +1,4 @@
+import { AlertService } from './../../shared/services/alert.service';
 import { Component, OnInit } from '@angular/core';
 import { ProductoVendido } from 'src/app/models/productoVendido.model';
 import { Venta } from 'src/app/models/venta.model';
@@ -12,7 +13,7 @@ export class VentasturnoComponent implements OnInit {
   ventas!: Venta[];
   isCollapsed = false;
 
-  constructor(private ventaService: VentaService) { }
+  constructor(private ventaService: VentaService,private _alert:AlertService) { }
 
   ngOnInit(): void {
     // Obtener las ventas usando el servicio
@@ -28,6 +29,7 @@ export class VentasturnoComponent implements OnInit {
     this.ventaService.deleteVenta(id,productos).subscribe(() => {
       // Venta eliminada con éxito, puedes actualizar la lista de ventas si es necesario
       console.log('Venta eliminada con éxito');
+      this._alert.showSuccessMessage("Y se fue...","Venta eliminada con exito")
     })
   }
 }

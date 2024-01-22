@@ -40,6 +40,7 @@ import { CuadreCajaComponent } from './components/cuadre-caja/cuadre-caja.compon
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { VentasturnoComponent } from './components/ventasturno/ventasturno.component';
 import { AuthComponent } from './components/auth/auth.component';
+import { MovimientosMensualComponent } from './components/movimientos-mensual/movimientos-mensual.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { AuthComponent } from './components/auth/auth.component';
     ProveedorComponent,
     UsuarioComponent,
     VentasturnoComponent,
-    AuthComponent
+    AuthComponent,
+    MovimientosMensualComponent
   ],
   imports: [
     BrowserModule,

@@ -46,7 +46,15 @@ export class MovimientoService {
   }
 
 
-  getMovimientosConNombresEnRangoDeFechas(fechaInicio: Date, fechaFin: Date): Observable<MovimientoInventario[]> {
+  getMovimientosConNombresEnRangoDeFechas(fechaInicio: Date): Observable<MovimientoInventario[]> {
+     // Establecer la hora en 3 pm para la fecha de inicio
+     fechaInicio.setDate(fechaInicio.getDate()+1);
+     fechaInicio.setHours(15, 0, 0, 0);
+
+      // Crear una nueva fecha para la fecha de finalización (5 am del día siguiente)
+    const fechaFin = new Date(fechaInicio);
+    fechaFin.setDate(fechaFin.getDate() + 1);
+    fechaFin.setHours(5, 0, 0, 0);
     return this.firestore.collection('movimientos', ref =>
       ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin)
     ).snapshotChanges().pipe(
@@ -86,5 +94,5 @@ export class MovimientoService {
       ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin).where('tipoMovimiento', '==', 'Venta')
     ).valueChanges();
   }
-  
+
 }
