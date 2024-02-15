@@ -13,6 +13,7 @@ export class CuadreCajaComponent implements OnInit {
   totalVentasPorVendedor!: TotalVentasPorVendedor[];
   totalVentasPorMetodoPago!: TotalVentasPorMetodoPago[];
   ventasSubcripcion: any;
+  turnoActivo!: boolean;
 
   constructor(private _ventaService: VentaService,
               private movimientoService: MovimientoService) { }
@@ -21,8 +22,11 @@ export class CuadreCajaComponent implements OnInit {
     this._ventaService.getVentas().subscribe((ventas) => {
       this.totalVentasPorVendedor = this._ventaService.calcularVentasPorVendedor(ventas);
       this.totalVentasPorMetodoPago = this._ventaService.calcularTotalVentasPorMetodoPago(ventas);
+      this.turnoActivo=localStorage.getItem('diaTurno') !== null ? true : false;
     });
   }
+
+
 
   // total-ventas.component.ts
 calcularTotalGeneralPorMetodoPago(): number {
@@ -57,11 +61,11 @@ calcularTotalGeneralPorMetodoPago(): number {
           });
 
           this._ventaService.deleteColeccionVentas().subscribe(
-            () => Swal.fire({
+            () =>{ Swal.fire({
               title: "A descansar!",
               text: "El turno se cerro correctamente !",
               icon: "success"
-            }),
+            })},
             (error) => Swal.fire({
               title: "A descansar!",
               text: "El turno no se cerro correctamente !"+error,
@@ -71,6 +75,9 @@ calcularTotalGeneralPorMetodoPago(): number {
         });
       });
     });
+
+    localStorage.removeItem("diaTurno");
+            this.turnoActivo=false;
   }
 
   ngOnDestroy(): void {
@@ -80,6 +87,12 @@ calcularTotalGeneralPorMetodoPago(): number {
       this.ventasSubcripcion.unsubscribe();
     }
 
+  }
+
+  abrirTurno(){
+    const diaActual = new Date().toLocaleString('es-ES', { weekday: 'long' }).toLowerCase();
+    localStorage.setItem("diaTurno",diaActual);
+    this.turnoActivo=true;
   }
 
 }

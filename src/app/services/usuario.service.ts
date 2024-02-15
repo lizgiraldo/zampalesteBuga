@@ -4,6 +4,7 @@ import { AngularFireAuth} from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/compat/firestore/';
 import { Observable, catchError, from, map, of, startWith, switchMap, take, throwError } from 'rxjs';
 import { Auth, createUserWithEmailAndPassword, updateCurrentUser } from 'firebase/auth';
+import { AlertService } from '../shared/services/alert.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,8 @@ export class UsuarioService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private firestore: AngularFirestore) {
+    private firestore: AngularFirestore,
+    private _alert:AlertService) {
     this.usuariosCollection = firestore.collection<Usuario>('usuarios');
   }
 
@@ -42,7 +44,18 @@ export class UsuarioService {
               // Agrega más campos según sea necesario
             };
 
-            return from(this.usuariosCollection.doc(userCredential.user?.uid).set(newUser));
+            // Utiliza catchError para manejar las excepciones de createUserWithEmailAndPassword
+            return from(this.usuariosCollection.doc(userCredential.user?.uid).set(newUser)).pipe(
+              catchError((error) => {
+                this._alert.showErrorMessage('Error al guardar el usuario en la base de datos:', error);
+                return throwError('Error al guardar el usuario en la base de datos.');
+              })
+            );
+          }),
+          catchError((error) => {
+            // Maneja las excepciones específicas de createUserWithEmailAndPassword aquí
+            this._alert.showErrorMessage('Error al crear el usuario con correo y contraseña:', error);
+            return throwError('Error al crear el usuario con correo y contraseña.');
           })
         );
       })

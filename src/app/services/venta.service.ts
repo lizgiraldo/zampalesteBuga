@@ -166,6 +166,7 @@ export class VentaService {
       const promises = productosVendidos.map(async (producto) => {
         const productoRef = this.firestore.collection('productos').doc(producto.id_producto).ref;
         const productoDoc = await transaction.get(productoRef);
+        const cantidadVendida=producto.cantidad;
 
         if (!productoDoc.exists) {
           throw new Error('El producto no existe.');
@@ -188,9 +189,12 @@ export class VentaService {
 
           // Actualiza el stock del producto de insumo
           const cantidadStockInsumoActual = insumoDoc.data() as {cantidadStock:number};
-          const nuevaCantidadStockInsumo = cantidadStockInsumoActual.cantidadStock + data.cantidadInsumo;
+          const nuevaCantidadStockInsumo = cantidadStockInsumoActual.cantidadStock + (data.cantidadInsumo*cantidadVendida);
           transaction.update(insumoRef, { cantidadStock: nuevaCantidadStockInsumo });
         }
+
+        // Actualizar el estado del producto a "eliminado"
+        transaction.update(productoRef, { estado: 'eliminado' });
 
         // Devuelve el stock del producto vendido
         const nuevaCantidadStock = cantidadStockActual + producto.cantidad;
@@ -198,7 +202,7 @@ export class VentaService {
       });
 
       await Promise.all(promises);
-      transaction.delete(ventaRef);
+
     }));
   }
 

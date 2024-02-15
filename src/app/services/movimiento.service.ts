@@ -54,7 +54,7 @@ export class MovimientoService {
       // Crear una nueva fecha para la fecha de finalización (5 am del día siguiente)
     const fechaFin = new Date(fechaInicio);
     fechaFin.setDate(fechaFin.getDate() + 1);
-    fechaFin.setHours(5, 0, 0, 0);
+    fechaFin.setHours(12, 0, 0, 0);
     return this.firestore.collection('movimientos', ref =>
       ref.where('fecha', '>=', fechaInicio).where('fecha', '<=', fechaFin)
     ).snapshotChanges().pipe(

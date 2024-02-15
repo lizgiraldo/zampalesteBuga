@@ -41,8 +41,9 @@ export class FacturarComponent implements OnInit {
   vendedores: Usuario[] = [];
   formPago: FormGroup;
 
-  numeroFactura:any;
-  numeroRemision:any;
+  numeroFactura: any;
+  numeroRemision: any;
+  turnoActivo: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -51,13 +52,15 @@ export class FacturarComponent implements OnInit {
     private _ventasService: VentaService,
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
-    private movimientoService: MovimientoService,
+    private movimientoService: MovimientoService
   ) {
     this.selectedProducto = '';
-
+    this.turnoActivo=localStorage.getItem('diaTurno') !== null ? true : false;
     this.productoService.getProductos().subscribe(
       (productos) => {
-        this.productos = productos.filter(producto=>producto.precioVenta>0 && producto.estado=='activo');
+        this.productos = productos.filter(
+          (producto) => this.turnoActivo && producto.cantidadStock>=1 && producto.preciosDia && producto.estado == 'activo'
+        );
         this.productos$ = this.filter.valueChanges.pipe(
           startWith(''),
           map((text) => this.search(text))
@@ -67,18 +70,20 @@ export class FacturarComponent implements OnInit {
         console.log(errorData);
       }
     );
-    this._usuarioService.getUsuarios().subscribe(usuarios => {
-      this.vendedores = usuarios.filter(usuario => usuario.estado === 'activo' && usuario.rol==='vendedor');
+    this._usuarioService.getUsuarios().subscribe((usuarios) => {
+      this.vendedores = usuarios.filter(
+        (usuario) => usuario.estado === 'activo' && usuario.rol === 'vendedor'
+      );
     });
 
     this.formPago = this.fb.group({
-      tipoDocumento:['Factura'],
-      vendedor: ["",Validators.required],
-      metodoPago : ['Efectivo'],
+      tipoDocumento: ['Factura'],
+      vendedor: ['', Validators.required],
+      metodoPago: ['Efectivo'],
       // Agrega más campos según tus necesidades
     });
-    this.numeroFactura=localStorage.getItem("numeroFactura");
-    this.numeroRemision=localStorage.getItem("numeroRemision");
+    this.numeroFactura = localStorage.getItem('numeroFactura');
+    this.numeroRemision = localStorage.getItem('numeroRemision');
   }
 
   ngOnInit(): void {
@@ -92,12 +97,10 @@ export class FacturarComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-
-    this.numeroFactura=localStorage.getItem("numeroFactura");
-    this.numeroRemision=localStorage.getItem("numeroRemision");
+    this.numeroFactura = localStorage.getItem('numeroFactura');
+    this.numeroRemision = localStorage.getItem('numeroRemision');
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-
   }
 
   loadProductos(): void {
@@ -129,26 +132,36 @@ export class FacturarComponent implements OnInit {
     );
 
     if (productoExistente) {
+      productoExistente.precioVenta = this.obtenerPrecio(productoExistente)
       productoExistente.cantidad += this.cantidadProductoSelecionado;
-      productoExistente.total = productoExistente.cantidad * productoExistente.precioVenta;
+      productoExistente.total =
+        productoExistente.cantidad *  productoExistente.precioVenta;
     } else {
       // Si el producto no existe en la lista, agrégalo con cantidad 1.
       //totalizar aca para que muestre el precio
-      item.total=this.cantidadProductoSelecionado *item.precioVenta;
-      this.productosSeleccionados.unshift({...item, cantidad:this.cantidadProductoSelecionado ,total:item.total });
+      item.precioVenta=this.obtenerPrecio(item)
+      item.total = this.cantidadProductoSelecionado *item.precioVenta;
+      this.productosSeleccionados.unshift({
+        ...item,
+        cantidad: this.cantidadProductoSelecionado,
+        total: item.total,
+      });
     }
-    this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
-    this.cantidadProductoSelecionado=1;
+    this.totalGeneral = this.productosSeleccionados.reduce(
+      (total, p) => total + p.total,
+      0
+    );
+    this.cantidadProductoSelecionado = 1;
   }
 
   buscarProductoPorCodigo(codigo: string) {
     // Implementa la lógica para buscar el producto en tu lista de productos en función del código
-    return this.productos.find(producto => producto.codigo_corto === codigo);
+    return this.productos.find((producto) => producto.codigo_corto === codigo);
   }
 
   buscarProductoPorId(codigo: string) {
     // Implementa la lógica para buscar el producto en tu lista de productos en función del código
-    return this.productos.find(producto => producto.id === codigo);
+    return this.productos.find((producto) => producto.id === codigo);
   }
 
   agregarProductoPorCodigo(event: Event) {
@@ -158,58 +171,80 @@ export class FacturarComponent implements OnInit {
     const partes = this.codigoProducto.split('-');
     const codigo = partes[0];
     const cantidad = parseInt(partes[1]);
-    this.cantidadProductoSelecionado=cantidad;
+    this.cantidadProductoSelecionado = cantidad;
     const productoEncontrado = this.buscarProductoPorCodigo(codigo);
-
 
     // Si se encuentra un producto válido, agrégalo a la lista de productos seleccionados
     if (productoEncontrado && !isNaN(cantidad) && cantidad > 0) {
       this.agregarElemento(productoEncontrado);
       this.codigoProducto = '';
-
-    }else{
-      this.cantidadProductoSelecionado=1;
+    } else {
+      this.cantidadProductoSelecionado = 1;
       this.agregarElemento(productoEncontrado);
       this.codigoProducto = '';
-      console.log("Se agregar elemento con valor de 1");
+      console.log('Se agregar elemento con valor de 1');
     }
 
     // Limpia el input después de agregar el producto
+  }
 
+  obtenerPrecio(producto: Producto) {
+    const diaActual = localStorage.getItem("diaTurno")+"";
+
+  const obtenerPrecioPorDia = (dia: string): number | undefined => {
+    const precioEncontrado = producto.preciosDia.find(precio =>
+      precio.dia.toLowerCase() === dia.toLowerCase()
+    );
+    return precioEncontrado?.precio;
+  };
+
+  const precioParaDiaActual = obtenerPrecioPorDia(diaActual);
+
+  // Si no se encuentra el precio para el día actual, obtener el precio para el jueves o un valor predeterminado (puedes ajustarlo según tus necesidades)
+  return precioParaDiaActual || obtenerPrecioPorDia('jueves') || 0;
   }
 
   pasoPago() {
     // Transforma la lista de productos seleccionados en productos_vendidos
     const form = this.formPago.value;
-    const productosVendidos = this.productosSeleccionados.map(producto => ({
+    const productosVendidos = this.productosSeleccionados.map((producto) => ({
+
       id_producto: producto.id,
       nombre_producto: producto.nombre,
       cantidad: producto.cantidad,
-      precio_unitario: producto.precioVenta
+      precio_unitario: this.obtenerPrecio(producto),
     }));
 
     // Crea la venta con los productos_vendidos
     const venta: Venta = {
-      numeroFactura:form.tipoDocumento=='Remision'?this.numeroRemision:this.numeroFactura,
-      tipo_documento:form.tipoDocumento,
+      numeroFactura:
+        form.tipoDocumento == 'Remision'
+          ? this.numeroRemision
+          : this.numeroFactura,
+      tipo_documento: form.tipoDocumento,
       id_vendedor: form.vendedor.id,
-      nombre_vendedor:form.vendedor.nombre,
-      metodo_pago:form.metodoPago,
+      nombre_vendedor: form.vendedor.nombre,
+      metodo_pago: form.metodoPago,
       productos_vendidos: productosVendidos,
       fecha_venta: new Date(),
-      monto_total: productosVendidos.reduce((total, producto) => total + (producto.cantidad * producto.precio_unitario), 0)
+      estado: 'activo',
+      monto_total: productosVendidos.reduce(
+        (total, producto) =>
+          total + producto.cantidad * producto.precio_unitario,
+        0
+      ),
     };
 
     // Guarda la venta en ventasEnCurso para ser procesada al final del turno
     this._ventasService.addVenta(venta).subscribe(
       () => {
         console.log('Venta guardada con éxito');
-        if(form.tipoDocumento=='Remision'){
-          this.numeroRemision++
-          localStorage.setItem('numeroRemision',this.numeroRemision)
-        }else{
+        if (form.tipoDocumento == 'Remision') {
+          this.numeroRemision++;
+          localStorage.setItem('numeroRemision', this.numeroRemision);
+        } else {
           this.numeroFactura++;
-          localStorage.setItem('numeroFactura',this.numeroFactura)
+          localStorage.setItem('numeroFactura', this.numeroFactura);
         }
       },
       (error) => {
@@ -219,12 +254,11 @@ export class FacturarComponent implements OnInit {
     //this.ventasEnCurso.push(venta);
 
     // Actualiza el stock de productos en this.productosSeleccionados
-    this.productosSeleccionados.forEach(producto => {
-
-      if(producto.insumos){
-        let cantidad = producto.cantidad*producto.cantidadInsumo;
-        producto=this.buscarProductoPorId(producto.codigoInsumo);
-        producto.cantidad=cantidad;
+    this.productosSeleccionados.forEach((producto) => {
+      if (producto.insumos) {
+        let cantidad = producto.cantidad * producto.cantidadInsumo;
+        producto = this.buscarProductoPorId(producto.codigoInsumo);
+        producto.cantidad = cantidad;
       }
       producto.cantidadStock -= producto.cantidad;
       this.productoService
@@ -241,29 +275,31 @@ export class FacturarComponent implements OnInit {
 
     //Actualizar el producto en el servicio de productos (Firebase)
 
-
     // Limpia la lista de productos seleccionados para un nuevo pedido
     this.productosSeleccionados = [];
     this.totalGeneral = 0;
   }
 
-  openModal(contenido:any){
+  openModal(contenido: any) {
     this.modalRef = this.modalService.show(contenido);
     this.editState = false;
   }
 
-  eliminarElemento(id: string){
-        // Buscar el índice del producto en la lista
-      const indice = this.productosSeleccionados.findIndex((p) => p.id === id);
+  eliminarElemento(id: string) {
+    // Buscar el índice del producto en la lista
+    const indice = this.productosSeleccionados.findIndex((p) => p.id === id);
 
-      // Verificar si el producto está en la lista
-      if (indice !== -1) {
-        // Eliminar el producto del array
-        this.productosSeleccionados.splice(indice, 1);
+    // Verificar si el producto está en la lista
+    if (indice !== -1) {
+      // Eliminar el producto del array
+      this.productosSeleccionados.splice(indice, 1);
 
-        // Recalcular el total general
-        this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
-      }
+      // Recalcular el total general
+      this.totalGeneral = this.productosSeleccionados.reduce(
+        (total, p) => total + p.total,
+        0
+      );
+    }
   }
   restarElemento(id: string) {
     // Buscar el índice del producto en la lista
@@ -276,12 +312,14 @@ export class FacturarComponent implements OnInit {
 
       // Actualizar el total del producto
       this.productosSeleccionados[indice].total =
-        this.productosSeleccionados[indice].cantidad * this.productosSeleccionados[indice].precioVenta;
+        this.productosSeleccionados[indice].cantidad *
+        this.obtenerPrecio(this.productosSeleccionados[indice]);
 
       // Recalcular el total general
-      this.totalGeneral = this.productosSeleccionados.reduce((total, p) => total + p.total, 0);
+      this.totalGeneral = this.productosSeleccionados.reduce(
+        (total, p) => total + p.total,
+        0
+      );
     }
   }
-
-
 }

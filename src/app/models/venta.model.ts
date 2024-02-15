@@ -11,4 +11,5 @@ export interface Venta {
   productos_vendidos: ProductoVendido[];
   fecha_venta: any; // Puedes usar `firebase.firestore.Timestamp` o `Date` según tus preferencias
   monto_total: number;
+  estado:string;
 }

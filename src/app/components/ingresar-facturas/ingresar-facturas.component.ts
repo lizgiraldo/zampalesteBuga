@@ -14,6 +14,7 @@ import { MovimientoService } from './../../services/movimiento.service';
 import { Observable, map, startWith } from 'rxjs';
 import { Proveedor } from 'src/app/models/proveedor.model';
 import Swal from 'sweetalert2';
+import { Precio } from 'src/app/models/precios.model';
 
 @Component({
   selector: 'app-ingresar-facturas',
@@ -33,6 +34,7 @@ export class IngresarFacturasComponent implements OnInit {
   mediosPago: string[] = ['Efectivo', 'Tarjeta de crédito', 'Transferencia bancaria'];
   proveedores!: Proveedor[];
   tiposDocumento: string[] = ['Factura','Remisión'];
+  preciosProducto!: Precio[];
 
 
   constructor(
@@ -44,12 +46,12 @@ export class IngresarFacturasComponent implements OnInit {
     this.productoSeleccionado = {} as Producto;
     this.productoForm = this.formBuilder.group({
       precioCompra: ['', Validators.required],
-      precioVenta: ['', Validators.required],
-      precioJueves: [''],
-      precioViernes: [''],
-      precioSabado: [''],
-      precioDomingo: [''],
-      precioLunes: [''],
+      precioVenta: [''],
+      precioJueves: ['', Validators.required],
+      precioViernes: ['', Validators.required],
+      precioSabado: ['', Validators.required],
+      precioDomingo: ['', Validators.required],
+      precioLunes: ['', Validators.required],
 
       cantidad: ['', Validators.required],
     });
@@ -83,11 +85,21 @@ export class IngresarFacturasComponent implements OnInit {
     if (this.productoForm.valid && this.productoSeleccionado) {
       // Obtenemos la cantidad ingresada por el usuario en el formulario
       const cantidadIngresada = this.productoSeleccionado.cantidadStock;
+
+      // Construimos el array de preciosDia
+    const preciosDia: Precio[] = [
+      { dia: 'Jueves', precio: this.productoForm.get('precioJueves')?.value },
+      { dia: 'Viernes', precio: this.productoForm.get('precioViernes')?.value },
+      { dia: 'Sábado', precio: this.productoForm.get('precioSabado')?.value },
+      { dia: 'Domingo', precio: this.productoForm.get('precioDomingo')?.value },
+      { dia: 'Lunes', precio: this.productoForm.get('precioLunes')?.value },
+    ];
       const productoConCantidad:ProductoSeleccionado = {
         ...this.productoSeleccionado,
         cantidadIngresada: this.productoForm.get('cantidad')?.value, // Agregamos el campo cantidad
         precioCompra: this.productoForm.get('precioCompra')?.value,
         precioVenta: this.productoForm.get('precioVenta')?.value,
+        preciosDia,
         // Puedes agregar otros campos según tus necesidades
       };
 
@@ -126,7 +138,7 @@ export class IngresarFacturasComponent implements OnInit {
       const movimiento: MovimientoInventario = {
         fecha: new Date(),
         tipoMovimiento: 'Entrada',
-        cantidad: producto.cantidadStock,
+        cantidad: producto.cantidadIngresada,
         productoID: producto.id,
         // Otros campos del movimiento según necesites
         factura_numero: this.facturaForm.get('facturaNumero')?.value,

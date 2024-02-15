@@ -1,3 +1,5 @@
+import { Precio } from "./precios.model";
+
 // Producto.ts
 export interface Producto {
   id?: string; // ID del producto (generado automáticamente por Firestore)
@@ -15,6 +17,8 @@ export interface Producto {
   promocion?:boolean;
   precio_promocion?:number;
   estado:string;
+  preciosDia: Array<Precio>;
 }
+
 
 

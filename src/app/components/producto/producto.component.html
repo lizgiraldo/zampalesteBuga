@@ -49,7 +49,18 @@
           <td>{{ producto.nombre }}</td>
           <td>{{ producto.codigo_corto }}</td>
           <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.precioVenta |number}}</td>
+          <td class="d-flex justify-content-center align-items-center">
+            <div class="btn-group" dropdown placement="bottom right">
+              <button id="button-alignment" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle " aria-controls="dropdown-alignment">
+                <i class="fas fa-bars"></i><span class="caret"></span>
+              </button>
+              <ul id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="button-alignment">
+                <li *ngFor="let precio of producto.preciosDia" role="menuitem">
+                  <a class="dropdown-item" href="#">{{ precio.dia }}: {{ precio.precio | number }} </a>
+                </li>
+              </ul>
+            </div>
+          </td>
           <td>{{ producto.precioCompra|number }}</td>
           <td>{{ producto.cantidadStock|number }}</td>
           <td>{{ producto.precio_promocion|number }}</td>

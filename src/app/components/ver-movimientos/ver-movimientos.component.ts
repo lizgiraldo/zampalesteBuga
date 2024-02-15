@@ -40,9 +40,6 @@ export class VerMovimientosComponent implements OnInit {
         });
     }
 
-
-
-
     onPageChange(event: any): void {
       this.currentPage = event.page;
       this.buscarMovimientos();

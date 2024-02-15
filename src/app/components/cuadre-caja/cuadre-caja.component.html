@@ -52,7 +52,8 @@
   </table>
   <br>
 
-  <button type="button" class="btn btn-primary my-3"(click)="procesarVentas()">Cerrar Turno</button>
+  <button *ngIf="turnoActivo" type="button" class="btn btn-primary my-3"(click)="procesarVentas()">Cerrar Turno</button>
+  <button *ngIf="!turnoActivo"type="button" class="btn btn-primary my-3"(click)="abrirTurno()">Abrir Turno</button>
 </div>
 
 

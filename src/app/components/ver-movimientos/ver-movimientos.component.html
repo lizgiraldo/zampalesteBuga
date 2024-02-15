@@ -19,8 +19,9 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Numero Factura</th>
-          <th>Proveedor</th>
+          <th>Tipo Doc.</th>
+          <th>#</th>
+          <th>Tipo Mov.</th>
           <th>Fecha</th>
           <th>Cantidad</th>
           <th>Nombre Producto</th>
@@ -30,8 +31,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let movimiento of movimientos">
-          <td>{{ movimiento.tipoDocumento }} {{ movimiento.factura_numero }}</td>
-          <td>{{ movimiento.proveedor }}</td>
+          <td>{{ movimiento.tipoDocumento }} </td>
+          <td>{{ movimiento.factura_numero }}</td>
+          <td>{{ movimiento.tipoMovimiento }}</td>
           <td>{{ movimiento.fecha  | timestampToDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
           <td>{{ movimiento.cantidad }}</td>
           <td>{{ movimiento.ProductoNombre }}</td>
