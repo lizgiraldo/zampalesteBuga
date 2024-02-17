@@ -10,7 +10,7 @@ import { MovimientoService } from 'src/app/services/movimiento.service';
 export class VerMovimientosComponent implements OnInit {
 
   movimientos: any[] = [];
-  pageSize = 10;
+  pageSize = 1000;
   currentPage = 1;
   totalItems = 0;
   fechaInicio!: Date;

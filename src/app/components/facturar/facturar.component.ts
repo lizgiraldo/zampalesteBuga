@@ -1,3 +1,4 @@
+import { ConsecutivosService } from './../../services/consecutivos.service';
 import { Usuario } from './../../models/usuario.model';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -45,6 +46,8 @@ export class FacturarComponent implements OnInit {
   numeroRemision: any;
   turnoActivo: boolean;
 
+  consecutivos: any;
+
   constructor(
     private fb: FormBuilder,
     private productoService: ProductoService,
@@ -52,7 +55,8 @@ export class FacturarComponent implements OnInit {
     private _ventasService: VentaService,
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
-    private movimientoService: MovimientoService
+    private movimientoService: MovimientoService,
+    private _consecutivos:ConsecutivosService
   ) {
     this.selectedProducto = '';
     this.turnoActivo=localStorage.getItem('diaTurno') !== null ? true : false;
@@ -82,8 +86,7 @@ export class FacturarComponent implements OnInit {
       metodoPago: ['Efectivo'],
       // Agrega más campos según tus necesidades
     });
-    this.numeroFactura = localStorage.getItem('numeroFactura');
-    this.numeroRemision = localStorage.getItem('numeroRemision');
+
   }
 
   ngOnInit(): void {
@@ -94,11 +97,17 @@ export class FacturarComponent implements OnInit {
       this.spinner.hide();
     }, 1500);
     //this.loadProductos();
+
+    this._consecutivos.getConsecutivos().subscribe(consecutivos => {
+      this.consecutivos = consecutivos;
+      this.numeroFactura = this.consecutivos.factura;
+    this.numeroRemision = this.consecutivos.remision;
+    });
   }
 
   ngAfterViewInit(): void {
-    this.numeroFactura = localStorage.getItem('numeroFactura');
-    this.numeroRemision = localStorage.getItem('numeroRemision');
+    this.numeroFactura = this.consecutivos?.factura;
+    this.numeroRemision = this.consecutivos?.remision;
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
   }
@@ -241,10 +250,12 @@ export class FacturarComponent implements OnInit {
         console.log('Venta guardada con éxito');
         if (form.tipoDocumento == 'Remision') {
           this.numeroRemision++;
-          localStorage.setItem('numeroRemision', this.numeroRemision);
+          this.consecutivos.remision=this.numeroRemision;
+          this._consecutivos.actualizarConsecutivos(this.consecutivos);
         } else {
           this.numeroFactura++;
-          localStorage.setItem('numeroFactura', this.numeroFactura);
+          this.consecutivos.factura=this.numeroFactura
+          this._consecutivos.actualizarConsecutivos(this.consecutivos);
         }
       },
       (error) => {
@@ -272,6 +283,8 @@ export class FacturarComponent implements OnInit {
           console.error('Error al actualizar el producto:', error);
         });
     });
+
+
 
     //Actualizar el producto en el servicio de productos (Firebase)
 
