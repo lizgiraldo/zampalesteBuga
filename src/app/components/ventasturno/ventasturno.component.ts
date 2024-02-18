@@ -19,7 +19,10 @@ export class VentasturnoComponent implements OnInit {
     // Obtener las ventas usando el servicio
     this.ventaService.getVentas().subscribe(ventas => {
       // Ordenar las ventas por número de factura de forma ascendente
-      this.ventas = ventas.sort((a, b) => a.numeroFactura - b.numeroFactura);
+      this.ventas = ventas
+    .filter(venta => venta.estado === 'activo') // Filtrar solo las ventas con estado activo
+    .sort((a, b) => a.numeroFactura - b.numeroFactura); // Ordenar las ventas activas por número de factura
+
     });
 
   }

@@ -54,6 +54,7 @@ calcularTotalGeneralPorMetodoPago(): number {
             precio: producto.precio_unitario,
             proveedor: 'Cliente', // Puedes ajustar esto según tus necesidades
             metodoPago: venta.metodo_pago,
+            estado_documento:venta.estado
           };
 
           this.movimientoService.agregarMovimiento(movimiento).then(() => {

@@ -10,4 +10,5 @@ export interface MovimientoInventario {
   precio:number;
   proveedor:string;
   metodoPago:string;
+  estado_documento:string;
 }

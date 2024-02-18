@@ -1,15 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, startWith, map } from 'rxjs';
 import { Producto } from './../../models/producto.model'; // Importa el modelo Producto
 import { ProductoService } from 'src/app/services/producto.service';
 import Swal from 'sweetalert2';
 import * as Papa from 'papaparse';
+import { Precio } from 'src/app/models/precios.model';
 @Component({
   selector: 'app-producto',
   templateUrl: './producto.component.html',
-  styleUrls: ['./producto.component.css']
+  styleUrls: ['./producto.component.css'],
 })
 export class ProductoComponent implements OnInit {
   productos$!: Observable<Producto[]>;
@@ -41,23 +47,30 @@ export class ProductoComponent implements OnInit {
       insumos: [false],
       codigoInsumo: [''],
       cantidadInsumo: [0],
-      promocion:[],
-      precio_promocion:[],
-      estado: ['activo',Validators.required]
+      promocion: [],
+      precio_promocion: [],
+      precioJueves: ['', Validators.required],
+      precioViernes: ['', Validators.required],
+      precioSabado: ['', Validators.required],
+      precioDomingo: ['', Validators.required],
+      precioLunes: ['', Validators.required],
+      estado: ['activo', Validators.required],
     });
 
     this.selectedProducto = '';
 
-    this.productoService.getProductos().subscribe((productos) => {
-      this.productos = productos;
-      this.productos$ = this.filter.valueChanges.pipe(
-        startWith(''),
-        map(text => this.search(text))
-      );
-    },
-    (errorData: any) => {
-      console.log(errorData);
-    });
+    this.productoService.getProductos().subscribe(
+      (productos) => {
+        this.productos = productos;
+        this.productos$ = this.filter.valueChanges.pipe(
+          startWith(''),
+          map((text) => this.search(text))
+        );
+      },
+      (errorData: any) => {
+        console.log(errorData);
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -84,25 +97,50 @@ export class ProductoComponent implements OnInit {
     if (this.productoForm.valid) {
       const productoData = this.productoForm.value as Producto;
       if (this.editingProducto) {
-
-        if(productoData.codigoInsumo!=null){
-          productoData.cantidadStock=1000
+        if (productoData.codigoInsumo != null) {
+          productoData.cantidadStock = 1000;
         }
         // Editar un producto existente
-        this.productoService.updateProducto(
-          this.editingProducto.id || '', // Asegúrate de obtener el ID correctamente
-          productoData
-        ).then(() => {
-          console.log('Producto actualizado con éxito');
-          this.editingProducto = null;
-          this.productoForm.reset();
-          this.mostrarMensaje();
-          this.modalRef.hide();
-        });
+        this.productoService
+          .updateProducto(
+            this.editingProducto.id || '', // Asegúrate de obtener el ID correctamente
+            productoData
+          )
+          .then(() => {
+            console.log('Producto actualizado con éxito');
+            this.editingProducto = null;
+            this.productoForm.reset();
+            this.mostrarMensaje();
+            this.modalRef.hide();
+          });
       } else {
         // Agregar un nuevo producto
-        if(productoData.codigoInsumo!=null){
-          productoData.cantidadStock=1000
+        if (productoData.codigoInsumo != null) {
+          productoData.cantidadStock = 1000;
+          // Construimos el array de preciosDia
+          const preciosDia: Precio[] = [
+            {
+              dia: 'Jueves',
+              precio: this.productoForm.get('precioJueves')?.value,
+            },
+            {
+              dia: 'Viernes',
+              precio: this.productoForm.get('precioViernes')?.value,
+            },
+            {
+              dia: 'Sábado',
+              precio: this.productoForm.get('precioSabado')?.value,
+            },
+            {
+              dia: 'Domingo',
+              precio: this.productoForm.get('precioDomingo')?.value,
+            },
+            {
+              dia: 'Lunes',
+              precio: this.productoForm.get('precioLunes')?.value,
+            },
+          ];
+          productoData.preciosDia = preciosDia;
         }
         this.productoService.addProducto(productoData).then(() => {
           console.log('Producto agregado con éxito');
@@ -151,32 +189,35 @@ export class ProductoComponent implements OnInit {
       icon: 'success',
       title: 'Your work has been saved',
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
     });
   }
 
   descargarCSV() {
-
     // Encabezados del CSV
-  const encabezados = ['Nombre', 'Precio Compra', 'Cantidad Stock'];
+    const encabezados = ['Nombre', 'Precio Compra', 'Cantidad Stock'];
 
-    const datosParaCSV = this.productos.map(producto => {
+    const datosParaCSV = this.productos.map((producto) => {
       return {
         nombre: producto.nombre,
         precioCompra: producto.precioCompra,
-        cantidadStock: producto.cantidadStock
+        cantidadStock: producto.cantidadStock,
         // Agrega otros campos según sea necesario
       };
     });
-    const arrayDatos = datosParaCSV.map(producto => [producto.nombre, producto.precioCompra, producto.cantidadStock]);
+    const arrayDatos = datosParaCSV.map((producto) => [
+      producto.nombre,
+      producto.precioCompra,
+      producto.cantidadStock,
+    ]);
 
-  // Agregar los encabezados al principio del array de datos
-  arrayDatos.unshift(encabezados);
+    // Agregar los encabezados al principio del array de datos
+    arrayDatos.unshift(encabezados);
 
     // Convierte datosParaCSV en formato CSV usando Papa.unparse() con punto y coma como separador
     const csvData = Papa.unparse(arrayDatos, {
       header: false, // Indica que los encabezados ya están incluidos en los datos
-      delimiter: ';' // Establece el punto y coma como separador de campo
+      delimiter: ';', // Establece el punto y coma como separador de campo
     });
     const blob = new Blob([csvData], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);

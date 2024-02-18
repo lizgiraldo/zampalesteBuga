@@ -146,7 +146,8 @@ export class IngresarFacturasComponent implements OnInit {
         proveedor: this.facturaForm.get('proveedor')?.value,
         metodoPago: this.facturaForm.get('medioPago')?.value,
         tipoDocumento: this.facturaForm.get('tipoDocumento')?.value,
-        usuarioID: ''
+        usuarioID: '',
+        estado_documento:''
       };
 
       // Agregar el movimiento de inventario utilizando el servicio de movimientos

@@ -49,7 +49,7 @@ export class VentaService {
     const totalVentasPorVendedor: TotalVentasPorVendedor[] = [];
 
     ventas.forEach((venta: Venta) => {
-      if (venta.tipo_documento !== "Obsequio") {  // Excluir ventas de tipo "Obsequio"
+      if (venta.tipo_documento !== "Obsequio" && venta.estado=="activo") {  // Excluir ventas de tipo "Obsequio"
         const existenteVendedor = totalVentasPorVendedor.find(v => v.nombre_vendedor === venta.nombre_vendedor);
 
         if (existenteVendedor) {
@@ -76,7 +76,7 @@ export class VentaService {
     const totalVentasPorMetodoPago: TotalVentasPorMetodoPago[] = [];
 
     ventas.forEach((venta: Venta) => {
-      if (venta.tipo_documento !== "Obsequio") {
+      if (venta.tipo_documento !== "Obsequio" && venta.estado=="activo") {
       const existenteMetodoPago = totalVentasPorMetodoPago.find(m => m.metodo === venta.metodo_pago && venta.tipo_documento!="Obsequio");
 
       if (existenteMetodoPago) {
@@ -193,8 +193,9 @@ export class VentaService {
           transaction.update(insumoRef, { cantidadStock: nuevaCantidadStockInsumo });
         }
 
-        // Actualizar el estado del producto a "eliminado"
-        transaction.update(productoRef, { estado: 'eliminado' });
+
+         // Actualizar el estado de la venta a "eliminado"
+      transaction.update(ventaRef, { estado: 'eliminado' });
 
         // Devuelve el stock del producto vendido
         const nuevaCantidadStock = cantidadStockActual + producto.cantidad;

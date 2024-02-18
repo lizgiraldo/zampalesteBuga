@@ -25,7 +25,7 @@
           <th>Fecha</th>
           <th>Cantidad</th>
           <th>Nombre Producto</th>
-          <th>Tipo de Movimiento</th>
+          <th>Estado Documento</th>
           <!-- Agrega más encabezados según las propiedades de MovimientoInventario -->
         </tr>
       </thead>
@@ -37,7 +37,7 @@
           <td>{{ movimiento.fecha  | timestampToDate | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
           <td>{{ movimiento.cantidad }}</td>
           <td>{{ movimiento.ProductoNombre }}</td>
-          <td>{{ movimiento.tipoMovimiento }}</td>
+          <td>{{ movimiento.estado_documento }}</td>
           <!-- Agrega más celdas según las propiedades de MovimientoInventario -->
         </tr>
       </tbody>
