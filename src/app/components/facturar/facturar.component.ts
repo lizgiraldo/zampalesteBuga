@@ -17,6 +17,7 @@ import { MovimientoService } from 'src/app/services/movimiento.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { VentaService } from 'src/app/services/venta.service';
+import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
   selector: 'app-facturar',
@@ -56,7 +57,8 @@ export class FacturarComponent implements OnInit {
     private modalService: BsModalService,
     private spinner: NgxSpinnerService,
     private movimientoService: MovimientoService,
-    private _consecutivos:ConsecutivosService
+    private _consecutivos:ConsecutivosService,
+    private _alertservice:AlertService
   ) {
     this.selectedProducto = '';
     this.turnoActivo=localStorage.getItem('diaTurno') !== null ? true : false;
@@ -141,20 +143,31 @@ export class FacturarComponent implements OnInit {
     );
 
     if (productoExistente) {
-      productoExistente.precioVenta = this.obtenerPrecio(productoExistente)
-      productoExistente.cantidad += this.cantidadProductoSelecionado;
-      productoExistente.total =
+      const totalProducto=productoExistente.cantidad+this.cantidadProductoSelecionado;
+      if (productoExistente.cantidadStock>=totalProducto){
+        productoExistente.precioVenta = this.obtenerPrecio(productoExistente)
+        productoExistente.cantidad += this.cantidadProductoSelecionado;
+        productoExistente.total =
         productoExistente.cantidad *  productoExistente.precioVenta;
+      }else{
+        this._alertservice.showInfoMessage("Falta stock","La cantidad seleccionada supera el stock del producto");
+      }
+
     } else {
       // Si el producto no existe en la lista, agrégalo con cantidad 1.
       //totalizar aca para que muestre el precio
-      item.precioVenta=this.obtenerPrecio(item)
-      item.total = this.cantidadProductoSelecionado *item.precioVenta;
-      this.productosSeleccionados.unshift({
-        ...item,
-        cantidad: this.cantidadProductoSelecionado,
-        total: item.total,
-      });
+      if (item.cantidadStock>=this.cantidadProductoSelecionado){
+        item.precioVenta=this.obtenerPrecio(item)
+        item.total = this.cantidadProductoSelecionado *item.precioVenta;
+        this.productosSeleccionados.unshift({
+          ...item,
+          cantidad: this.cantidadProductoSelecionado,
+          total: item.total,
+        });
+      }else{
+        this._alertservice.showInfoMessage("Falta stock","La cantidad seleccionada supera el stock del producto");
+      }
+
     }
     this.totalGeneral = this.productosSeleccionados.reduce(
       (total, p) => total + p.total,
@@ -165,7 +178,7 @@ export class FacturarComponent implements OnInit {
 
   buscarProductoPorCodigo(codigo: string) {
     // Implementa la lógica para buscar el producto en tu lista de productos en función del código
-    return this.productos.find((producto) => producto.codigo_corto === codigo);
+    return this.productos.find((producto) => producto.codigo_corto.toLowerCase() === codigo.toLowerCase());
   }
 
   buscarProductoPorId(codigo: string) {
